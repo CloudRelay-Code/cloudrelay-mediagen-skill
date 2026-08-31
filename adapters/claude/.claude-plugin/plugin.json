@@ -1,18 +1,18 @@
 {
   "name": "cloudrelay-imagegen-claude",
-  "version": "1.2.0",
-  "description": "CloudRelay asynchronous image generation and editing for Claude Code.",
+  "version": "1.4.0",
+  "description": "CloudRelay unified GPT, Gemini, and Grok image generation for Claude Code.",
   "author": {
     "name": "CloudRelay Code"
   },
   "skills": "./skills/",
   "interface": {
     "displayName": "CloudRelay ImageGen",
-    "shortDescription": "Generate and edit images through CloudRelay.",
-    "longDescription": "Submit asynchronous CloudRelay image jobs, poll them safely, and save verified results.",
+    "shortDescription": "Generate images through CloudRelay's unified API.",
+    "longDescription": "Discover provider capabilities, submit unified asynchronous image tasks, and save verified results.",
     "developerName": "CloudRelay Code",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
-    "defaultPrompt": "Use CloudRelay ImageGen for this image-generation or image-editing request."
+    "defaultPrompt": "Use CloudRelay ImageGen for this GPT, Gemini, or Grok image-generation request."
   }
 }

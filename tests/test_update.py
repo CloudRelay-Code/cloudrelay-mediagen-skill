@@ -13,6 +13,10 @@ from unittest import mock
 from scripts import _update_common as update_common
 
 
+REPOSITORY = Path(__file__).resolve().parent.parent
+CURRENT_VERSION = (REPOSITORY / "VERSION").read_text(encoding="utf-8").strip()
+
+
 class UpdateTests(unittest.TestCase):
     class _Response:
         def __init__(self, payload: bytes) -> None:
@@ -30,12 +34,12 @@ class UpdateTests(unittest.TestCase):
 
     def test_release_metadata_parses_tag_asset_and_digest(self) -> None:
         payload = {
-            "tag_name": "v1.2.0",
-            "published_at": "2026-08-11T00:00:00Z",
+            "tag_name": f"v{CURRENT_VERSION}",
+            "published_at": "2026-08-31T00:00:00Z",
             "assets": [
                 {
                     "name": "cloudrelay-imagegen.skill",
-                    "browser_download_url": "https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/v1.2.0/cloudrelay-imagegen.skill",
+                    "browser_download_url": f"https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/v{CURRENT_VERSION}/cloudrelay-imagegen.skill",
                     "digest": "sha256:" + "a" * 64,
                 }
             ],
@@ -45,14 +49,14 @@ class UpdateTests(unittest.TestCase):
             return_value=self._Response(json.dumps(payload).encode("utf-8")),
         ):
             release = update_common.fetch_latest_release(timeout=1)
-        self.assertEqual(release.version.normalized, "1.2.0")
+        self.assertEqual(release.version.normalized, CURRENT_VERSION)
         self.assertEqual(release.asset_digest, "a" * 64)
 
     def test_release_asset_digest_mismatch_is_rejected(self) -> None:
         release = update_common.ReleaseInfo(
-            version=update_common.parse_version("1.2.0"),
-            tag_name="v1.2.0",
-            asset_url="https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/v1.2.0/cloudrelay-imagegen.skill",
+            version=update_common.parse_version(CURRENT_VERSION),
+            tag_name=f"v{CURRENT_VERSION}",
+            asset_url=f"https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/v{CURRENT_VERSION}/cloudrelay-imagegen.skill",
             asset_digest="0" * 64,
             published_at=None,
         )
@@ -81,13 +85,13 @@ class UpdateTests(unittest.TestCase):
         with self.assertRaises(update_common.UpdateError):
             update_common.parse_version("1.2.0-01")
 
-    def _release_archive(self, prefix: str = "cloudrelay-imagegen-skill-1.2.0") -> bytes:
-        repository = Path(__file__).resolve().parent.parent
+    def _release_archive(self, prefix: str | None = None) -> bytes:
+        prefix = prefix or f"cloudrelay-imagegen-skill-{CURRENT_VERSION}"
         stream = BytesIO()
         with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as archive:
             for relative in update_common.REQUIRED_FILES:
                 archive.write(
-                    repository / relative,
+                    REPOSITORY / relative,
                     f"{prefix}/{relative.as_posix()}",
                 )
         return stream.getvalue()
@@ -98,7 +102,7 @@ class UpdateTests(unittest.TestCase):
             update_common.extract_release_archive(self._release_archive(), destination)
             self.assertEqual(
                 update_common.validate_skill_tree(destination).normalized,
-                "1.2.0",
+                CURRENT_VERSION,
             )
             self.assertTrue((destination / "scripts/update.py").is_file())
 
@@ -112,12 +116,11 @@ class UpdateTests(unittest.TestCase):
             self.assertFalse((Path(temporary).parent / "outside.txt").exists())
 
     def test_apply_preserves_unknown_files(self) -> None:
-        repository = Path(__file__).resolve().parent.parent
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary) / "installed"
             target.mkdir()
             for relative in update_common.REQUIRED_FILES:
-                source = repository / relative
+                source = REPOSITORY / relative
                 destination = target / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(source, destination)
@@ -128,23 +131,25 @@ class UpdateTests(unittest.TestCase):
             update_common.apply_staged_release(stage, target)
 
             self.assertEqual(custom.read_text(encoding="utf-8"), "keep me")
-            self.assertEqual((target / "VERSION").read_text(encoding="utf-8").strip(), "1.2.0")
+            self.assertEqual(
+                (target / "VERSION").read_text(encoding="utf-8").strip(),
+                CURRENT_VERSION,
+            )
 
     def test_apply_rechecks_version_under_lock(self) -> None:
-        repository = Path(__file__).resolve().parent.parent
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary) / "installed"
             target.mkdir()
             for relative in update_common.REQUIRED_FILES:
                 destination = target / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(repository / relative, destination)
-            (target / "VERSION").write_text("1.3.0\n", encoding="utf-8")
+                shutil.copy2(REPOSITORY / relative, destination)
+            (target / "VERSION").write_text("1.5.0\n", encoding="utf-8")
 
             stage, _ = update_common.stage_release(self._release_archive(), target.parent)
             with self.assertRaises(update_common.UpdateError):
                 update_common.apply_staged_release(stage, target)
-            self.assertEqual((target / "VERSION").read_text(encoding="utf-8").strip(), "1.3.0")
+            self.assertEqual((target / "VERSION").read_text(encoding="utf-8").strip(), "1.5.0")
 
     def test_stale_update_lock_is_reclaimed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -170,14 +175,13 @@ class UpdateTests(unittest.TestCase):
 
     @unittest.skipUnless(os.name != "nt", "FIFO special files are POSIX-only")
     def test_apply_rejects_special_destination_file(self) -> None:
-        repository = Path(__file__).resolve().parent.parent
         with tempfile.TemporaryDirectory() as temporary:
             target = Path(temporary) / "installed"
             target.mkdir()
             for relative in update_common.REQUIRED_FILES:
                 destination = target / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(repository / relative, destination)
+                shutil.copy2(REPOSITORY / relative, destination)
             fifo = target / "scripts/update.py"
             fifo.unlink()
             os.mkfifo(fifo)

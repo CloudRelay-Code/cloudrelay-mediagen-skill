@@ -31,10 +31,30 @@ class SkillContractTests(unittest.TestCase):
             with self.subTest(path=relative_path):
                 self.assertTrue((self.repository / relative_path).is_file())
 
-    def test_async_timeout_rationale_is_preserved(self) -> None:
-        self.assertIn("120-second", self.body)
-        self.assertIn("retain its job ID", self.body)
-        self.assertIn("never replace polling", self.body)
+    def test_unified_channels_and_credentials_are_documented(self) -> None:
+        for provider, environment, group in (
+            ("GPT", "CLOUDRELAY_GPT_IMAGE_API_KEY", "生图专用"),
+            ("Gemini", "CLOUDRELAY_GEMINI_API_KEY", "gemini"),
+            ("Grok", "CLOUDRELAY_GROK_API_KEY", "grok"),
+        ):
+            with self.subTest(provider=provider):
+                self.assertIn(provider, self.body)
+                self.assertIn(environment, self.body)
+                self.assertIn(group, self.body)
+        self.assertIn("GET  /v1/media/models", self.body)
+        self.assertIn("POST /v1/images/generations/async", self.body)
+        self.assertIn("GET  /v1/images/tasks/{task_id}", self.body)
+        self.assertIn("gpt-image-2", self.body)
+        self.assertIn("grok-imagine-image-2.0", self.body)
+        self.assertIn("async=false", self.body)
+        self.assertIn("Authorization: Bearer", self.body)
+
+    def test_gemini_confirmation_and_parameter_report_are_documented(self) -> None:
+        self.assertIn("gemini-3.1-flash-image-preview", self.body)
+        self.assertIn("gemini-3-pro-image-preview", self.body)
+        self.assertIn("Do not choose between them silently", self.body)
+        self.assertIn("effective parameter summary", self.body)
+        self.assertIn("credential group", self.body)
 
     def test_openai_metadata_is_valid(self) -> None:
         metadata = yaml.safe_load(

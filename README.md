@@ -26,7 +26,7 @@ The updater only trusts the GitHub Releases endpoint for this repository, requir
 
 For each release, make the Git tag, root `VERSION`, adapter manifest versions, and packaged asset version identical. Upload the asset as `cloudrelay-imagegen.skill`; the updater rejects a missing digest, a tag/archive version mismatch, a downgrade, or an archive that omits the updater runtime files.
 
-通过 [CloudRelay](https://cloudrelay.cn) 异步图片 API 生成和编辑图片的跨客户端 Agent Skill。同一份 `SKILL.md` 原生兼容 Codex、Claude Code、Gemini CLI、OpenClaw 和 Cursor，不需要维护客户端分叉版本。
+通过 [CloudRelay](https://cloudrelay.cn) 统一异步媒体 API 生成图片的跨客户端 Agent Skill。同一份 `SKILL.md` 原生兼容 Codex、Claude Code、Gemini CLI、OpenClaw 和 Cursor，不需要维护客户端分叉版本。
 
 ## 为什么使用异步接口
 
@@ -39,12 +39,15 @@ CloudRelay 为此开发了异步生图接口：客户端只需提交一次生成
 ## 功能
 
 - 使用 `gpt-image-2` 等 CloudRelay 支持的模型生成图片
-- 使用本地参考图片进行编辑
-- 支持 `1024x1024`、`1536x1024`、`1024x1536` 和自动尺寸
+- GPT 默认使用 `gpt-image-2`
+- Grok 默认使用 `grok-imagine-image-2.0`
+- Gemini 使用 `gemini-3.1-flash-image-preview` 或 `gemini-3-pro-image-preview`，每次调用前必须由用户确认
+- GPT、Gemini、Grok 共用模型发现、异步提交和任务轮询接口
+- 支持 `1024x1024`、`1536x1024`、`1024x1536`、`2048x2048` 和自动尺寸
 - 支持一次生成 1 至 4 张图片
 - 自动提交异步任务、轮询状态并保存 base64 或 URL 结果
-- 自动识别 PNG、JPEG、GIF 和 WebP
-- 使用隐藏输入配置 API Key，不通过聊天、源码或命令行参数传递凭据
+- 自动识别 PNG、JPEG、GIF 和 WebP，并在结束后报告实际生成参数
+- 三个渠道分别使用独立环境变量和密钥分组，不跨渠道回退
 - 运行脚本只依赖 Python 标准库
 
 ## 兼容性
@@ -65,7 +68,9 @@ Gemini CLI、OpenClaw 和 Cursor 也支持项目中的 `.agents/skills/` 兼容�
 
 - Python 3.10 或更高版本
 - 可以访问 `https://cloudrelay.cn` 的网络环境
-- CloudRelay API Key，Key 分组必须是 `生图专用`
+- GPT：`CLOUDRELAY_GPT_IMAGE_API_KEY`，密钥分组必须是 `生图专用`
+- Gemini：`CLOUDRELAY_GEMINI_API_KEY`，密钥使用 `gemini` 分组
+- Grok：`CLOUDRELAY_GROK_API_KEY`，密钥使用 `grok` 分组
 - 至少安装一个受支持的 Agent 客户端
 
 ## 统一安装器
@@ -168,22 +173,20 @@ openclaw skills install git:CloudRelay-Code/cloudrelay-imagegen-skill@main
 
 ## 配置 API Key
 
-在 [CloudRelay](https://cloudrelay.cn) 创建 API Key，并确保 Key 分组名称严格为 `生图专用`。然后在仓库目录或已安装的 Skill 目录中运行：
+在 [CloudRelay](https://cloudrelay.cn) 创建对应分组的 API Key。三个渠道必须分别配置，不能用其他渠道的 Key 代替：
+
+| 渠道 | 环境变量 | 必需分组 | 配置命令 |
+|---|---|---|---|
+| GPT | `CLOUDRELAY_GPT_IMAGE_API_KEY` | `生图专用` | `python scripts/configure_api_key.py --provider gpt` |
+| Gemini | `CLOUDRELAY_GEMINI_API_KEY` | `gemini` | `python scripts/configure_api_key.py --provider gemini` |
+| Grok | `CLOUDRELAY_GROK_API_KEY` | `grok` | `python scripts/configure_api_key.py --provider grok` |
+
+脚本使用隐藏输入，Key 不会显示在终端中。Windows 保存为用户级环境变量，macOS/Linux 保存到 `${XDG_CONFIG_HOME:-~/.config}/cloudrelay/` 下对应的独立文件。只检查是否已配置、不显示 Key：
 
 ```bash
-python scripts/configure_api_key.py
-```
-
-脚本使用隐藏输入，Key 不会显示在终端中。
-
-- Windows：保存到用户级环境变量 `CLOUDRELAY_IMAGE_API_KEY`
-- macOS/Linux：保存到 `${XDG_CONFIG_HOME:-~/.config}/cloudrelay/imagegen-api-key`，目录权限为 `0700`，文件权限为 `0600`
-- 如果进程环境中已经设置 `CLOUDRELAY_IMAGE_API_KEY`，运行脚本会优先使用该环境变量
-
-只检查是否已配置，不显示 Key：
-
-```bash
-python scripts/configure_api_key.py --check
+python scripts/configure_api_key.py --provider gpt --check
+python scripts/configure_api_key.py --provider gemini --check
+python scripts/configure_api_key.py --provider grok --check
 ```
 
 ## 使用
@@ -194,11 +197,7 @@ python scripts/configure_api_key.py --check
 通过 CloudRelay 生成一张 1536x1024、电影感的雪山日出图片，保存到 generated-images。
 ```
 
-编辑参考图片：
-
-```text
-通过 CloudRelay 编辑这张本地图片，把背景改成夜晚城市并保持主体不变。
-```
+指定渠道时，在请求中说明 `GPT`、`Gemini` 或 `Grok`。使用 Gemini 时，必须先确认使用 `gemini-3.1-flash-image-preview` 还是 `gemini-3-pro-image-preview`。
 
 Codex 和 OpenClaw 也可以显式引用：
 
@@ -216,24 +215,16 @@ Gemini CLI 首次自动激活 Skill 时会请求用户确认。Cursor 会根据 
 
 ## 直接调用脚本
 
-生成图片：
+生成图片（GPT 示例）：
 
 ```bash
 python scripts/generate_image.py \
+  --provider "gpt" \
   --prompt "a cinematic sunrise over snowy mountains" \
   --model "gpt-image-2" \
   --size "1536x1024" \
   --quality "high" \
   --count 1 \
-  --output-dir ./generated-images
-```
-
-编辑图片：
-
-```bash
-python scripts/generate_image.py \
-  --prompt "replace the background with a night city" \
-  --input-image ./reference.png \
   --output-dir ./generated-images
 ```
 
@@ -249,8 +240,9 @@ python scripts/generate_image.py --help
 
 - 仓库和 `.skill` 包不包含 API Key 或生成结果。
 - 生成脚本不接受命令行 Key 参数，避免凭据进入 Shell 历史。
-- Skill 明确禁止 Agent 要求用户把 Key 粘贴进聊天。
+- Skill 不会主动索要 Key；如果用户自愿通过聊天提供，脚本会通过 stdin 安全配置且不会回显。
 - 请求目标固定为 `https://cloudrelay.cn`。
+- 三个渠道统一使用 `/v1/media/models`、`/v1/images/generations/async` 和 `/v1/images/tasks/{task_id}`，所有请求均使用对应渠道的 Bearer Key。
 - 安装第三方 Skill 前仍应检查 `SKILL.md` 和脚本，并根据客户端设置网络、Shell 和文件权限。
 
 ## 验证

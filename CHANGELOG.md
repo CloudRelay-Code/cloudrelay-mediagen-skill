@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.0 - 2026-08-31
+
+- Unify GPT, Gemini, and Grok image generation on the CloudRelay media discovery and asynchronous task API.
+- Add provider-specific credentials for the GPT `生图专用`, Gemini `gemini`, and Grok `grok` groups.
+- Add Gemini model confirmation, strict capability validation, URL/base64 result handling, and credential-free parameter reports.
+- Harden redirects, task polling, output downloads, and provider key-file configuration.
+
 ## 1.2.0 - 2026-08-11
 
 - Add a read-only GitHub Releases version check.

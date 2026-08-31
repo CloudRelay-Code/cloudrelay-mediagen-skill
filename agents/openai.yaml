@@ -1,7 +1,7 @@
 interface:
   display_name: "CloudRelay ImageGen"
-  short_description: "默认通过 CloudRelay 异步生成、编辑并保存图片"
-  default_prompt: "使用 $cloudrelay-imagegen 根据我的提示词生成或编辑图片，并将结果保存到工作区。"
+  short_description: "通过统一接口调用 GPT、Gemini、Grok 生图"
+  default_prompt: "使用 $cloudrelay-imagegen 通过统一异步接口调用 GPT、Gemini 或 Grok 生图，并回报实际参数。"
 
 policy:
   allow_implicit_invocation: true
