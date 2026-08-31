@@ -49,6 +49,7 @@ class CredentialTests(unittest.TestCase):
             stdin.read.return_value = "test-key-value\n"
             self.assertEqual(configure_api_key._read_key_from_stdin(), "test-key-value")
 
+    @unittest.skipUnless(os.name != "nt", "POSIX secret-file persistence is not used on Windows")
     def test_provider_persistence_writes_outside_skill(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             for provider in configure_api_key.PROVIDERS:

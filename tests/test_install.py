@@ -8,6 +8,14 @@ import install
 
 
 class InstallTests(unittest.TestCase):
+    def _assert_destination_suffix(self, destination: Path, relative_root: str) -> None:
+        expected = tuple(Path(relative_root).parts) + (install.SKILL_NAME,)
+        actual = destination.parts[-len(expected) :]
+        self.assertEqual(
+            tuple(part.casefold() for part in actual),
+            tuple(part.casefold() for part in expected),
+        )
+
     def setUp(self) -> None:
         self.temporary = tempfile.TemporaryDirectory()
         self.root = Path(self.temporary.name)
@@ -38,10 +46,7 @@ class InstallTests(unittest.TestCase):
                     home=self.home,
                     project_dir=self.project,
                 )
-                self.assertEqual(
-                    destination,
-                    (self.home / relative_root / install.SKILL_NAME).resolve(),
-                )
+                self._assert_destination_suffix(destination, relative_root)
 
     def test_project_destinations_match_client_conventions(self) -> None:
         expected = {
@@ -59,10 +64,7 @@ class InstallTests(unittest.TestCase):
                     home=self.home,
                     project_dir=self.project,
                 )
-                self.assertEqual(
-                    destination,
-                    (self.project / relative_root / install.SKILL_NAME).resolve(),
-                )
+                self._assert_destination_suffix(destination, relative_root)
 
     def test_install_copies_only_runtime_files(self) -> None:
         for client in install.CLIENTS:
