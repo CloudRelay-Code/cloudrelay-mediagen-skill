@@ -19,7 +19,7 @@ Choose one channel for each request. A channel's key is used for model discovery
 
 | Channel | Environment variable | Required key group | Default/allowed model | Unified protocol |
 |---|---|---|---|---|
-| GPT/OpenAI | CLOUDRELAY_GPT_IMAGE_API_KEY | 生图专用 | default gpt-image-2 | discovery + async images |
+| GPT/OpenAI | CLOUDRELAY_GPT_IMAGE_API_KEY | 生图专用 | default gpt-image-2.5-flare | discovery + async images |
 | Gemini/Google | CLOUDRELAY_GEMINI_API_KEY | gemini | user must choose one allowed model | discovery + async images |
 | Grok/xAI | CLOUDRELAY_GROK_API_KEY | grok | default grok-imagine-image-2.0 | discovery + async images |
 
@@ -76,7 +76,7 @@ python "<skill-directory>/scripts/check_update.py" --quiet --timeout 3
 
 Treat a network or release-metadata failure as non-fatal. If it reports update-available, tell the user a newer skill is available but do not replace the skill during an image request. If CLOUDRELAY_IMAGEGEN_AUTO_UPDATE=1 is already set by the user, run python "<skill-directory>/scripts/update.py" --auto first; update failures remain non-fatal and the variable must never be set by the skill.
 
-1. Collect the channel, prompt, output directory, model, size, quality, and image count. If no channel is requested, use GPT with gpt-image-2; Grok defaults to grok-imagine-image-2.0; Gemini requires the explicit model confirmation above. Defaults are size auto, quality auto, and count 1. With auto, the corresponding field is omitted so the gateway/upstream can choose.
+1. Collect the channel, prompt, output directory, model, size, quality, and image count. If no channel is requested, use GPT with gpt-image-2.5-flare; Grok defaults to grok-imagine-image-2.0; Gemini requires the explicit model confirmation above. Defaults are size auto, quality auto, and count 1. With auto, the corresponding field is omitted so the gateway/upstream can choose.
 2. Resolve the active skill directory from this SKILL.md; resolve bundled scripts relative to it rather than the current working directory.
 3. Check the selected provider key:
 
@@ -91,7 +91,7 @@ python "<skill-directory>/scripts/configure_api_key.py" --provider <selected-cha
 python "<skill-directory>/scripts/generate_image.py" \
   --provider "gpt" \
   --prompt "a cinematic sunrise over snowy mountains" \
-  --model "gpt-image-2" \
+  --model "gpt-image-2.5-flare" \
   --size "1536x1024" \
   --quality "high" \
   --count 1 \

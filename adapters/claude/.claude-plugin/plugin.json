@@ -1,6 +1,6 @@
 {
   "name": "cloudrelay-imagegen-claude",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "CloudRelay unified GPT, Gemini, and Grok image generation for Claude Code.",
   "author": {
     "name": "CloudRelay Code"

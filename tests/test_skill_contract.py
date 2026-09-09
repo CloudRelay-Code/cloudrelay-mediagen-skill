@@ -44,7 +44,7 @@ class SkillContractTests(unittest.TestCase):
         self.assertIn("GET  /v1/media/models", self.body)
         self.assertIn("POST /v1/images/generations/async", self.body)
         self.assertIn("GET  /v1/images/tasks/{task_id}", self.body)
-        self.assertIn("gpt-image-2", self.body)
+        self.assertIn("gpt-image-2.5-flare", self.body)
         self.assertIn("grok-imagine-image-2.0", self.body)
         self.assertIn("async=false", self.body)
         self.assertIn("Authorization: Bearer", self.body)

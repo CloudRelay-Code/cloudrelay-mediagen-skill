@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1 - 2026-09-09
+
+- Change the default GPT image model to `gpt-image-2.5-flare`.
+
 ## 1.4.0 - 2026-08-31
 
 - Unify GPT, Gemini, and Grok image generation on the CloudRelay media discovery and asynchronous task API.

@@ -11,7 +11,7 @@ from scripts import generate_image
 class UnifiedProtocolTests(unittest.TestCase):
     def _args(self, provider: str) -> object:
         model = {
-            "gpt": "gpt-image-2",
+            "gpt": "gpt-image-2.5-flare",
             "gemini": "gemini-3.1-flash-image-preview",
             "grok": "grok-imagine-image-2.0",
         }[provider]
@@ -30,7 +30,7 @@ class UnifiedProtocolTests(unittest.TestCase):
 
     def test_channel_defaults_and_gemini_model_gate(self) -> None:
         self.assertEqual(generate_image._resolve_provider("auto", None), "gpt")
-        self.assertEqual(generate_image._resolve_model("gpt", None), "gpt-image-2")
+        self.assertEqual(generate_image._resolve_model("gpt", None), "gpt-image-2.5-flare")
         self.assertEqual(
             generate_image._resolve_model("grok", None), "grok-imagine-image-2.0"
         )
@@ -120,7 +120,7 @@ class UnifiedProtocolTests(unittest.TestCase):
                                 )
 
     def test_discovery_rejects_disabled_permission_and_empty_models(self) -> None:
-        model = "gpt-image-2"
+        model = "gpt-image-2.5-flare"
         for payload in (
             {
                 "platform": "gpt",
@@ -165,14 +165,14 @@ class UnifiedProtocolTests(unittest.TestCase):
         args = self._args("gpt")
         self.assertEqual(
             generate_image._image_payload(args),
-            {"model": "gpt-image-2", "prompt": "a test image", "n": 2},
+            {"model": "gpt-image-2.5-flare", "prompt": "a test image", "n": 2},
         )
         args.size = "1536x1024"
         args.quality = "high"
         self.assertEqual(
             generate_image._image_payload(args),
             {
-                "model": "gpt-image-2",
+                "model": "gpt-image-2.5-flare",
                 "prompt": "a test image",
                 "n": 2,
                 "size": "1536x1024",
@@ -199,7 +199,7 @@ class UnifiedProtocolTests(unittest.TestCase):
         rendered = "\n".join(str(call.args[0]) for call in printer.call_args_list)
         self.assertIn("Generation parameters:", rendered)
         self.assertIn("1536x1024", rendered)
-        self.assertIn("gpt-image-2", rendered)
+        self.assertIn("gpt-image-2.5-flare", rendered)
         self.assertNotIn("secret-key", rendered)
         parameters_line = next(
             line for line in rendered.splitlines() if line.startswith("PARAMETERS_JSON=")

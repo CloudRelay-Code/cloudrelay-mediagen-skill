@@ -38,8 +38,8 @@ CloudRelay 为此开发了异步生图接口：客户端只需提交一次生成
 
 ## 功能
 
-- 使用 `gpt-image-2` 等 CloudRelay 支持的模型生成图片
-- GPT 默认使用 `gpt-image-2`
+- 使用 `gpt-image-2.5-flare` 等 CloudRelay 支持的模型生成图片
+- GPT 默认使用 `gpt-image-2.5-flare`
 - Grok 默认使用 `grok-imagine-image-2.0`
 - Gemini 使用 `gemini-3.1-flash-image-preview` 或 `gemini-3-pro-image-preview`，每次调用前必须由用户确认
 - GPT、Gemini、Grok 共用模型发现、异步提交和任务轮询接口
@@ -221,7 +221,7 @@ Gemini CLI 首次自动激活 Skill 时会请求用户确认。Cursor 会根据 
 python scripts/generate_image.py \
   --provider "gpt" \
   --prompt "a cinematic sunrise over snowy mountains" \
-  --model "gpt-image-2" \
+  --model "gpt-image-2.5-flare" \
   --size "1536x1024" \
   --quality "high" \
   --count 1 \

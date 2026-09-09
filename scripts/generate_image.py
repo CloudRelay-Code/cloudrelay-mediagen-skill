@@ -26,7 +26,7 @@ IMAGE_TASK_PATH = "/v1/images/tasks/{task_id}"
 
 PROVIDERS = ("gpt", "gemini", "grok")
 DEFAULT_MODELS = {
-    "gpt": "gpt-image-2",
+    "gpt": "gpt-image-2.5-flare",
     "grok": "grok-imagine-image-2.0",
 }
 GEMINI_MODELS = frozenset(
