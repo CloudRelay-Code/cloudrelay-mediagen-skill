@@ -103,6 +103,29 @@ Use --provider gemini --model <confirmed-model> or --provider grok for the other
 
 The unified task accepts {model, prompt, n} and adds size and quality only when they are not auto. Completed results are read from result.data; each image may contain url or b64_json and optional mime_type. URLs must be downloaded with the normal browser-like User-Agent used by the script.
 
+### 2K and 4K Output
+
+Prefer explicit `--size WIDTHxHEIGHT` based on the desired ratio and the user's resolution convention. The CLI accepts positive pixel dimensions; the upstream determines which sizes it can deliver. The legacy case-insensitive aliases `2k` and `4k` still resolve to `2048x2048` and `4096x4096` for compatibility, and do not represent the user's screenshot table below. Do not use those aliases when following this table.
+
+The user supplied these size examples; tier labels are the source's conventions, not guarantees of output dimensions:
+
+| Ratio | 2K size | 4K size |
+|---|---|---|
+| 1:1 | 1440x1440 | 2160x2160 |
+| 16:9 | 2560x1440 | 3840x2160 |
+| 9:16 | 1152x2048 | 2160x3840 |
+| 4:3 | 1920x1440 | 2880x2160 |
+| 3:4 | 1440x1920 | 2160x2880 |
+| 3:2 | 2160x1440 | 3240x2160 |
+| 2:3 | 1440x2160 | 2160x3240 |
+| 21:9 | 2560x1097 | 3840x1646 |
+
+Resolution is controlled by `size`, independently of `quality`. Send the requested size to the gateway; do not substitute local upscaling. Model discovery confirms model availability, not supported output dimensions. If the upstream rejects a size, report the error without silently lowering resolution or resubmitting. After generation, read the saved image's actual pixel dimensions and report them separately from the requested size; a completed task alone does not prove 2K/4K output. Do not claim untested models or channels support these sizes.
+
+Resolution presets and actual-size reporting are available from version 1.5.0.
+
+Live checks on 2026-09-24 with `gpt-image-2.5-flare`, quality `high`, one image per request: 2048x2048 and the screenshot's square 4K example 2160x2160 returned exact dimensions. A 4096x4096 request returned 2508x2508; the screenshot's 16:9 4K example 3840x2160 returned 3344x1882. Both reduced results have approximately 6.29 million pixels, suggesting an upstream pixel budget, not proving its exact limit or applicability to other models. The script reports `actual_sizes` and `resolution_verified`, and warns when an explicit size is not met. State exact dimensions and the source's tier convention rather than making a blanket 4K-support claim.
+
 ## Version Checks And Updates
 
 Use VERSION as the installed skill version; do not add a version field to the frontmatter. The updater trusts only the CloudRelay-Code/cloudrelay-imagegen-skill GitHub release asset and verifies the SHA-256 digest returned by the GitHub Releases API before staging files. This digest is an integrity check, not an independent publisher signature; GitHub and repository-release access remain the trust root.
@@ -132,7 +155,7 @@ scripts/generate_image.py, scripts/configure_api_key.py, scripts/check_update.py
 --provider auto|gpt|gemini|grok
 --prompt TEXT
 --model NAME
---size auto|1024x1024|1536x1024|1024x1536|2048x2048
+--size auto|2k|4k|WIDTHxHEIGHT
 --quality auto|low|medium|high
 --count 1..4
 --output-dir PATH

@@ -2,6 +2,14 @@
 
 This repository is versioned through the root `VERSION` file. The installed skill can check for a newer release without changing files, and it can apply a verified release when explicitly authorized.
 
+From 1.5.0, `--size WIDTHxHEIGHT` accepts explicit pixel dimensions, including
+`2160x2160` and `3840x2160`. Square aliases `2k` and `4k` resolve to
+`2048x2048` and `4096x4096`; use explicit dimensions for other resolution
+conventions. The report includes `actual_sizes` and `resolution_verified` and
+warns if the upstream returns different dimensions. Request acceptance does
+not guarantee the requested resolution; see `SKILL.md` for aspect-ratio
+examples and measured results.
+
 Check the installed copy:
 
 ```bash

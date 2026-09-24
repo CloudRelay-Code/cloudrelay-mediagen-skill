@@ -184,6 +184,8 @@ class UnifiedProtocolTests(unittest.TestCase):
             generate_image,
             "_save_images",
             return_value=[Path("C:/images/task-123_0.png")],
+        ), mock.patch.object(
+            generate_image, "_image_dimensions", return_value=(1536, 1024)
         ), mock.patch("builtins.print") as printer:
             generate_image._save_and_report(
                 args,
@@ -209,6 +211,8 @@ class UnifiedProtocolTests(unittest.TestCase):
         self.assertEqual(parameters["credential_group"], "生图专用")
         self.assertEqual(parameters["count_requested"], 2)
         self.assertEqual(parameters["count_saved"], 1)
+        self.assertEqual(parameters["actual_sizes"], ["1536x1024"])
+        self.assertTrue(parameters["resolution_verified"])
         self.assertEqual(parameters["transport"], "async")
         self.assertEqual(parameters["endpoint"], "/v1/images/generations/async")
 

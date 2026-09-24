@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import struct
 import sys
 import time
 import urllib.error
@@ -656,6 +657,55 @@ def _save_images(
     return saved
 
 
+def _image_dimensions(path: Path) -> tuple[int, int] | None:
+    """Read dimensions for PNG, GIF, JPEG and WebP without extra dependencies."""
+    data = path.read_bytes()
+    if data.startswith(b"\x89PNG\r\n\x1a\n") and len(data) >= 24:
+        return struct.unpack(">II", data[16:24])
+    if data.startswith((b"GIF87a", b"GIF89a")) and len(data) >= 10:
+        return struct.unpack("<HH", data[6:10])
+    if data.startswith(b"RIFF") and data[8:12] == b"WEBP":
+        offset = 12
+        while offset + 8 <= len(data):
+            kind = data[offset:offset + 4]
+            length = int.from_bytes(data[offset + 4:offset + 8], "little")
+            chunk = data[offset + 8:offset + 8 + length]
+            if kind == b"VP8X" and len(chunk) >= 10:
+                return (1 + int.from_bytes(chunk[4:7], "little"),
+                        1 + int.from_bytes(chunk[7:10], "little"))
+            if kind == b"VP8 " and len(chunk) >= 10 and chunk[3:6] == b"\x9d\x01\x2a":
+                width, height = struct.unpack("<HH", chunk[6:10])
+                return width & 0x3fff, height & 0x3fff
+            if kind == b"VP8L" and len(chunk) >= 5 and chunk[0] == 0x2f:
+                bits = int.from_bytes(chunk[1:5], "little")
+                return (bits & 0x3fff) + 1, ((bits >> 14) & 0x3fff) + 1
+            offset += 8 + length + (length % 2)
+    if data.startswith(b"\xff\xd8"):
+        offset = 2
+        while offset + 4 <= len(data):
+            if data[offset] != 0xff:
+                break
+            while offset < len(data) and data[offset] == 0xff:
+                offset += 1
+            if offset >= len(data):
+                break
+            marker = data[offset]
+            offset += 1
+            if marker in (0xd9, 0xda):
+                break
+            if marker == 0x01 or 0xd0 <= marker <= 0xd8:
+                continue
+            length = int.from_bytes(data[offset:offset + 2], "big")
+            if length < 2 or offset + length > len(data):
+                break
+            if marker in {0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7,
+                          0xc9, 0xca, 0xcb, 0xcd, 0xce, 0xcf} and length >= 7:
+                height, width = struct.unpack(">HH", data[offset + 3:offset + 7])
+                return width, height
+            offset += length
+    return None
+
+
 def _save_and_report(
     args: argparse.Namespace,
     provider: str,
@@ -668,11 +718,26 @@ def _save_and_report(
     api_key: str | None = None,
 ) -> list[Path]:
     saved = _save_images(task_id, images, args.output_dir, api_key)
+    actual_sizes = []
+    for path in saved:
+        dimensions = _image_dimensions(path)
+        actual = f"{dimensions[0]}x{dimensions[1]}" if dimensions else None
+        actual_sizes.append(actual)
+        if args.size != "auto" and actual != args.size:
+            print(
+                f"Resolution warning: requested {args.size}, actual {actual or 'unknown'}; "
+                "requested resolution is not verified. No upscale or resubmission performed.",
+                file=sys.stderr,
+            )
     summary = {
         "provider": provider,
         "model": args.model,
         "prompt": args.prompt,
         "size": args.size if args.size != "auto" else "auto (omitted)",
+        "actual_sizes": actual_sizes,
+        "resolution_verified": (
+            all(size == args.size for size in actual_sizes) if args.size != "auto" else None
+        ),
         "quality": args.quality if args.quality != "auto" else "auto (omitted)",
         "count_requested": args.count,
         "count_saved": len(saved),
@@ -698,6 +763,8 @@ def _save_and_report(
         ("model", "model"),
         ("prompt", "prompt"),
         ("size", "size"),
+        ("actual sizes", "actual_sizes"),
+        ("resolution verified", "resolution_verified"),
         ("quality", "quality"),
         ("count requested", "count_requested"),
         ("count saved", "count_saved"),
@@ -728,6 +795,17 @@ def _positive_timeout(value: str) -> float:
     return timeout
 
 
+def _parse_size(value: str) -> str:
+    """Resolve square resolution presets to explicit gateway pixel dimensions."""
+    normalized = value.strip().lower().replace("×", "x")
+    normalized = {"2k": "2048x2048", "4k": "4096x4096"}.get(normalized, normalized)
+    if normalized != "auto" and not re.fullmatch(r"[1-9][0-9]*x[1-9][0-9]*", normalized):
+        raise argparse.ArgumentTypeError(
+            "choose auto, 2k, 4k, or positive WIDTHxHEIGHT pixel dimensions"
+        )
+    return normalized
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Generate images through CloudRelay's unified GPT, Gemini, and Grok API."
@@ -746,9 +824,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--size",
-        choices=("auto", "1024x1024", "1536x1024", "1024x1536", "2048x2048"),
+        type=_parse_size,
         default="auto",
-        help="Image size; auto omits the field and lets the gateway/upstream choose.",
+        help="Pixel size, or square presets 2k (2048x2048) / 4k (4096x4096); auto omits the field.",
     )
     parser.add_argument(
         "--quality",

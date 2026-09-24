@@ -144,12 +144,13 @@ class UpdateTests(unittest.TestCase):
                 destination = target / relative
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copy2(REPOSITORY / relative, destination)
-            (target / "VERSION").write_text("1.5.0\n", encoding="utf-8")
+            newer_version = f"{int(CURRENT_VERSION.split('.')[0]) + 1}.0.0"
+            (target / "VERSION").write_text(newer_version + "\n", encoding="utf-8")
 
             stage, _ = update_common.stage_release(self._release_archive(), target.parent)
             with self.assertRaises(update_common.UpdateError):
                 update_common.apply_staged_release(stage, target)
-            self.assertEqual((target / "VERSION").read_text(encoding="utf-8").strip(), "1.5.0")
+            self.assertEqual((target / "VERSION").read_text(encoding="utf-8").strip(), newer_version)
 
     def test_stale_update_lock_is_reclaimed(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

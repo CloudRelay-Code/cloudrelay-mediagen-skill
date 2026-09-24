@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.0 - 2026-09-24
+
+- Accept explicit positive pixel dimensions and case-insensitive square 2K/4K aliases.
+- Report actual PNG, JPEG, GIF, and WebP dimensions and warn when requested dimensions are not met.
+- Document resolution examples by aspect ratio and measured upstream output limits.
+- Add offline resolution parameter regression tests.
+
 ## 1.4.1 - 2026-09-09
 
 - Change the default GPT image model to `gpt-image-2.5-flare`.

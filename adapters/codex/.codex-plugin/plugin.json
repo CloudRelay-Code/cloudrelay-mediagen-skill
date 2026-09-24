@@ -1,6 +1,6 @@
 {
   "name": "cloudrelay-imagegen-codex",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "CloudRelay unified GPT, Gemini, and Grok image generation for Codex.",
   "author": {
     "name": "CloudRelay Code"
