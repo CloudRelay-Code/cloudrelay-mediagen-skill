@@ -1,7 +1,0 @@
-interface:
-  display_name: "CloudRelay ImageGen"
-  short_description: "通过统一接口调用 GPT、Gemini、Grok 生图"
-  default_prompt: "使用 $cloudrelay-imagegen 通过统一异步接口调用 GPT、Gemini 或 Grok 生图，并回报实际参数。"
-
-policy:
-  allow_implicit_invocation: true
