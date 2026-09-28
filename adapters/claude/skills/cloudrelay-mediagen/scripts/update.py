@@ -77,6 +77,9 @@ def main(argv: list[str] | None = None) -> int:
     # Keep symlink/junction components visible to the safety check. Resolving
     # first would silently turn a linked target into an unrelated real path.
     target = args.target_dir.expanduser().absolute()
+    if (target / "SKILL.md").is_file() and "name: cloudrelay-mediagen" in (target / "SKILL.md").read_text(encoding="utf-8"):
+        print("Local media variant: legacy image-only release updates are disabled; no compatible media release source is configured.")
+        return 0
     if args.yes and not (args.apply or args.auto):
         print("Update failed: --yes requires --apply or --auto.", file=sys.stderr)
         return 1

@@ -47,6 +47,10 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     target = args.target_dir.expanduser().resolve()
+    if (target / "SKILL.md").is_file() and "name: cloudrelay-mediagen" in (target / "SKILL.md").read_text(encoding="utf-8"):
+        result = {"status": "local-variant", "message": "Legacy image-only release source is incompatible; media release source is not configured."}
+        print(json.dumps(result) if args.as_json else result["message"])
+        return 0
     try:
         current = local_version(target)
         latest = fetch_latest_release(timeout=args.timeout)

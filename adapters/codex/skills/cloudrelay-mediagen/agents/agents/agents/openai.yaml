@@ -1,0 +1,7 @@
+interface:
+  display_name: "CloudRelay 图影生成"
+  short_description: "通过 CloudRelay 生成图片和视频，支持图生视频、编辑与续写"
+  default_prompt: "使用 $cloudrelay-mediagen 生成图片或视频，按所选渠道调用 CloudRelay 并回报实际参数。"
+
+policy:
+  allow_implicit_invocation: true

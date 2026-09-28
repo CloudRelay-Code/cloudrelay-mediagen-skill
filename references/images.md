@@ -1,9 +1,4 @@
----
-name: cloudrelay-imagegen
-description: "Generate raster images through CloudRelay's unified GPT, Gemini, and Grok media API, with isolated credentials, model discovery, asynchronous tasks, and verified parameter reporting."
----
-
-# CloudRelay Image Generation
+# Image workflow
 
 Use the bundled generator for CloudRelay image requests. Never request or expose a credential unnecessarily. If a user voluntarily pastes a CloudRelay key into the chat because they cannot configure it themselves, accept it only for the configuration handoff below; do not repeat it, quote it, log it, place it in command-line arguments, source files, repositories, or generated artifacts.
 
@@ -68,16 +63,8 @@ Do not say that the terminal is mandatory. If the user chooses chat configuratio
 
 ## Unified Workflow
 
-Before the numbered workflow, make a best-effort, read-only release check:
-
-```text
-python "<skill-directory>/scripts/check_update.py" --quiet --timeout 3
-```
-
-Treat a network or release-metadata failure as non-fatal. If it reports update-available, tell the user a newer skill is available but do not replace the skill during an image request. If CLOUDRELAY_IMAGEGEN_AUTO_UPDATE=1 is already set by the user, run python "<skill-directory>/scripts/update.py" --auto first; update failures remain non-fatal and the variable must never be set by the skill.
-
 1. Collect the channel, prompt, output directory, model, size, quality, and image count. If no channel is requested, use GPT with gpt-image-2.5-flare; Grok defaults to grok-imagine-image-2.0; Gemini requires the explicit model confirmation above. Defaults are size auto, quality auto, and count 1. With auto, the corresponding field is omitted so the gateway/upstream can choose.
-2. Resolve the active skill directory from this SKILL.md; resolve bundled scripts relative to it rather than the current working directory.
+2. Resolve the active skill directory from the root SKILL.md; resolve bundled scripts relative to it rather than the current working directory.
 3. Check the selected provider key:
 
 ```text
@@ -126,18 +113,6 @@ Resolution presets and actual-size reporting are available from version 1.5.0.
 
 Live checks on 2026-09-24 with `gpt-image-2.5-flare`, quality `high`, one image per request: 2048x2048 and the screenshot's square 4K example 2160x2160 returned exact dimensions. A 4096x4096 request returned 2508x2508; the screenshot's 16:9 4K example 3840x2160 returned 3344x1882. Both reduced results have approximately 6.29 million pixels, suggesting an upstream pixel budget, not proving its exact limit or applicability to other models. The script reports `actual_sizes` and `resolution_verified`, and warns when an explicit size is not met. State exact dimensions and the source's tier convention rather than making a blanket 4K-support claim.
 
-## Version Checks And Updates
-
-Use VERSION as the installed skill version; do not add a version field to the frontmatter. The updater trusts only the CloudRelay-Code/cloudrelay-imagegen-skill GitHub release asset and verifies the SHA-256 digest returned by the GitHub Releases API before staging files. This digest is an integrity check, not an independent publisher signature; GitHub and repository-release access remain the trust root.
-
-When the user explicitly asks to update this skill, run:
-
-```text
-python "<skill-directory>/scripts/update.py" --apply
-```
-
-Use --auto only when the user has explicitly authorized unattended updates or a trusted scheduler is running the command. The updater validates the release archive, Python syntax, skill identity, and archive paths; it replaces only managed runtime files and never modifies API-key storage or generated image directories. Restart the host agent or start a new task after an update so the host reloads the skill.
-
 ## Failure Handling
 
 - For 401 or 403, report that the selected channel key was rejected and ask the user to confirm it is active and belongs to 生图专用, gemini, or grok as appropriate. Do not switch credentials or channels.
@@ -149,7 +124,7 @@ Use --auto only when the user has explicitly authorized unattended updates or a 
 
 ## Script Reference
 
-scripts/generate_image.py, scripts/configure_api_key.py, scripts/check_update.py, and scripts/update.py use only the Python standard library. The image script fixes the credential boundary to https://cloudrelay.cn; update scripts use only this repository's fixed GitHub Releases endpoint.
+scripts/generate_image.py and scripts/configure_api_key.py use only the Python standard library. The image script fixes the credential boundary to https://cloudrelay.cn.
 
 ```text
 --provider auto|gpt|gemini|grok
