@@ -8,13 +8,16 @@ from pathlib import Path
 import zipfile
 
 
-SKILL_NAME = "cloudrelay-imagegen"
+SKILL_NAME = "cloudrelay-mediagen"
 PACKAGE_FILES = (
     Path("SKILL.md"),
     Path("VERSION"),
     Path("agents/openai.yaml"),
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
+    Path("scripts/generate_video.py"),
+    Path("references/images.md"),
+    Path("references/videos.md"),
     Path("scripts/_update_common.py"),
     Path("scripts/check_update.py"),
     Path("scripts/update.py"),
@@ -38,7 +41,7 @@ def build_package(source_root: Path, output_dir: Path) -> Path:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Package CloudRelay ImageGen.")
+    parser = argparse.ArgumentParser(description="Package CloudRelay MediaGen.")
     parser.add_argument("--output-dir", type=Path, default=Path("dist"))
     args = parser.parse_args()
     source_root = Path(__file__).resolve().parent.parent

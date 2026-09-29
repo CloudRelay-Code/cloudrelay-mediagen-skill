@@ -5,7 +5,7 @@ description: "图影生成：通过 CloudRelay 生成 GPT、Gemini、Grok 图片
 
 # CloudRelay 图影生成
 
-Use the bundled scripts for CloudRelay image and video requests. Resolve scripts relative to this SKILL.md. This replaces cloudrelay-imagegen; the ID and folder are now `cloudrelay-mediagen`. Existing key storage and environment variable names remain compatible.
+Use the bundled scripts for CloudRelay image and video requests. Resolve scripts relative to this SKILL.md. This is the renamed image-and-video skill; its ID and folder are `cloudrelay-mediagen`. Existing key storage and environment variable names remain compatible.
 
 ## Choose the workflow
 

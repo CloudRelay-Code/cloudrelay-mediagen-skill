@@ -13,12 +13,13 @@ class SkillContractTests(unittest.TestCase):
         text = (cls.repository / "SKILL.md").read_text(encoding="utf-8")
         if not text.startswith("---\n"):
             raise AssertionError("SKILL.md must start with YAML frontmatter")
-        _, frontmatter, cls.body = text.split("---", 2)
+        _, frontmatter, body = text.split("---", 2)
+        cls.body = body + "\n" + (cls.repository / "references/images.md").read_text(encoding="utf-8")
         cls.metadata = yaml.safe_load(frontmatter)
 
     def test_frontmatter_uses_portable_fields_only(self) -> None:
         self.assertEqual(set(self.metadata), {"name", "description"})
-        self.assertEqual(self.metadata["name"], "cloudrelay-imagegen")
+        self.assertEqual(self.metadata["name"], "cloudrelay-mediagen")
         self.assertIsInstance(self.metadata["description"], str)
         self.assertIn("CloudRelay", self.metadata["description"])
 
@@ -26,6 +27,8 @@ class SkillContractTests(unittest.TestCase):
         for relative_path in (
             "scripts/configure_api_key.py",
             "scripts/generate_image.py",
+            "scripts/generate_video.py",
+            "references/videos.md",
             "agents/openai.yaml",
         ):
             with self.subTest(path=relative_path):
@@ -61,7 +64,7 @@ class SkillContractTests(unittest.TestCase):
             (self.repository / "agents/openai.yaml").read_text(encoding="utf-8")
         )
         prompt = metadata["interface"]["default_prompt"]
-        self.assertIn("$cloudrelay-imagegen", prompt)
+        self.assertIn("$cloudrelay-mediagen", prompt)
 
 
 if __name__ == "__main__":

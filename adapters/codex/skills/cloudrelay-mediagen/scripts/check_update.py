@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check the latest CloudRelay ImageGen release without changing files."""
+"""Check the latest CloudRelay MediaGen release without changing files."""
 
 from __future__ import annotations
 
@@ -27,7 +27,7 @@ except ImportError:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Check for a CloudRelay ImageGen update.")
+    parser = argparse.ArgumentParser(description="Check for a CloudRelay MediaGen update.")
     parser.add_argument(
         "--target-dir",
         type=Path,
@@ -66,7 +66,7 @@ def main(argv: list[str] | None = None) -> int:
                 else "up-to-date"
             )
         result = {
-            "repository": "CloudRelay-Code/cloudrelay-imagegen-skill",
+            "repository": "CloudRelay-Code/cloudrelay-mediagen-skill",
             "current": current.normalized if current else None,
             "latest": latest.version.normalized,
             "tag": latest.tag_name,
@@ -79,7 +79,7 @@ def main(argv: list[str] | None = None) -> int:
             print(json.dumps(result, ensure_ascii=True, sort_keys=True))
         elif not args.quiet or status != "up-to-date":
             print(
-                f"CloudRelay ImageGen: current={result['current'] or 'unknown'} "
+                f"CloudRelay MediaGen: current={result['current'] or 'unknown'} "
                 f"latest={result['latest']} status={status}"
             )
         return 0

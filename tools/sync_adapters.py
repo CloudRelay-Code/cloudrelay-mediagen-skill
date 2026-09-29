@@ -15,13 +15,16 @@ if str(REPOSITORY_ROOT) not in sys.path:
 from scripts._update_common import UpdateError, ensure_safe_path
 
 
-SKILL_NAME = "cloudrelay-imagegen"
+SKILL_NAME = "cloudrelay-mediagen"
 MANAGED_FILES = (
     Path("SKILL.md"),
     Path("VERSION"),
     Path("agents/openai.yaml"),
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
+    Path("scripts/generate_video.py"),
+    Path("references/images.md"),
+    Path("references/videos.md"),
     Path("scripts/_update_common.py"),
     Path("scripts/check_update.py"),
     Path("scripts/update.py"),

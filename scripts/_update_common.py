@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared, network-safe helpers for CloudRelay ImageGen updates."""
+"""Shared, network-safe helpers for CloudRelay MediaGen updates."""
 
 from __future__ import annotations
 
@@ -22,19 +22,19 @@ import urllib.request
 import zipfile
 
 
-REPOSITORY = "CloudRelay-Code/cloudrelay-imagegen-skill"
+REPOSITORY = "CloudRelay-Code/cloudrelay-mediagen-skill"
 LATEST_RELEASE_URL = (
     "https://api.github.com/repos/"
     f"{REPOSITORY}/releases/latest"
 )
-ASSET_NAME = "cloudrelay-imagegen.skill"
+ASSET_NAME = "cloudrelay-mediagen.skill"
 try:
     _installed_version = (Path(__file__).resolve().parents[1] / "VERSION").read_text(
         encoding="utf-8"
     ).strip()
 except OSError:
     _installed_version = "unknown"
-USER_AGENT = f"cloudrelay-imagegen-skill-updater/{_installed_version}"
+USER_AGENT = f"cloudrelay-mediagen-skill-updater/{_installed_version}"
 MAX_DOWNLOAD_BYTES = 64 * 1024 * 1024
 MAX_EXTRACTED_BYTES = 64 * 1024 * 1024
 LOCK_STALE_SECONDS = 6 * 60 * 60
@@ -241,7 +241,7 @@ def download_release_asset(
         parsed_url.scheme != "https"
         or parsed_url.netloc != "github.com"
         or not parsed_url.path.startswith(
-            "/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/"
+            "/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/"
         )
         or parsed_url.query
         or parsed_url.fragment
@@ -414,8 +414,8 @@ def validate_skill_tree(skill_dir: Path) -> SemanticVersion:
     if len(name_values) != 1:
         raise UpdateError("Release SKILL.md must contain exactly one name field.")
     name_value = name_values[0].strip().strip("'\"")
-    if name_value != "cloudrelay-imagegen":
-        raise UpdateError("Release SKILL.md is not the cloudrelay-imagegen skill.")
+    if name_value != "cloudrelay-mediagen":
+        raise UpdateError("Release SKILL.md is not the cloudrelay-mediagen skill.")
 
     version = parse_version((skill_dir / "VERSION").read_text(encoding="utf-8"))
     for path in skill_dir.joinpath("scripts").glob("*.py"):

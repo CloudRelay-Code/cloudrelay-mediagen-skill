@@ -1,4 +1,4 @@
-# CloudRelay ImageGen
+# CloudRelay MediaGen
 
 This repository is versioned through the root `VERSION` file. The installed skill can check for a newer release without changing files, and it can apply a verified release when explicitly authorized.
 
@@ -28,11 +28,11 @@ For a trusted scheduled job that has been explicitly configured for unattended u
 python scripts/update.py --auto
 ```
 
-To opt in to applying verified updates automatically when the skill activates, set `CLOUDRELAY_IMAGEGEN_AUTO_UPDATE=1` in the host environment. Without that explicit opt-in, activation performs a read-only check and reports an available update instead of changing files.
+To opt in to applying verified updates automatically when the skill activates, set `CLOUDRELAY_MEDIAGEN_AUTO_UPDATE=1` in the host environment. Without that explicit opt-in, activation performs a read-only check and reports an available update instead of changing files.
 
 The updater only trusts the GitHub Releases endpoint for this repository, requires the release asset SHA-256 digest, validates the downloaded archive before replacement, and updates only managed runtime files. The digest verifies transfer/content integrity against the GitHub API response; it is not a publisher signature, so GitHub and repository-release access remain the trust root. It never reads or writes the CloudRelay API key, generated images, or unrelated files. Network failures during the normal skill activation check are non-fatal.
 
-For each release, make the Git tag, root `VERSION`, adapter manifest versions, and packaged asset version identical. Upload the asset as `cloudrelay-imagegen.skill`; the updater rejects a missing digest, a tag/archive version mismatch, a downgrade, or an archive that omits the updater runtime files.
+For each release, make the Git tag, root `VERSION`, adapter manifest versions, and packaged asset version identical. Upload the asset as `cloudrelay-mediagen.skill`; the updater rejects a missing digest, a tag/archive version mismatch, a downgrade, or an archive that omits the updater runtime files.
 
 通过 [CloudRelay](https://cloudrelay.cn) 统一异步媒体 API 生成图片的跨客户端 Agent Skill。同一份 `SKILL.md` 原生兼容 Codex、Claude Code、Gemini CLI、OpenClaw 和 Cursor，不需要维护客户端分叉版本。
 
@@ -64,11 +64,11 @@ CloudRelay 为此开发了异步生图接口：客户端只需提交一次生成
 
 | 客户端 | 用户级目录 | 项目级目录 | 加载方式 |
 |---|---|---|---|
-| Codex | `~/.codex/skills/cloudrelay-imagegen` | `.agents/skills/cloudrelay-imagegen` | 重启或新建任务 |
-| Claude Code | `~/.claude/skills/cloudrelay-imagegen` | `.claude/skills/cloudrelay-imagegen` | 新建会话 |
-| Gemini CLI | `~/.gemini/skills/cloudrelay-imagegen` | `.gemini/skills/cloudrelay-imagegen` | `/skills reload` |
-| OpenClaw | `~/.openclaw/skills/cloudrelay-imagegen` | `skills/cloudrelay-imagegen` | 新会话或文件监视器刷新 |
-| Cursor | `~/.cursor/skills/cloudrelay-imagegen` | `.cursor/skills/cloudrelay-imagegen` | 新建 Agent 对话 |
+| Codex | `~/.codex/skills/cloudrelay-mediagen` | `.agents/skills/cloudrelay-mediagen` | 重启或新建任务 |
+| Claude Code | `~/.claude/skills/cloudrelay-mediagen` | `.claude/skills/cloudrelay-mediagen` | 新建会话 |
+| Gemini CLI | `~/.gemini/skills/cloudrelay-mediagen` | `.gemini/skills/cloudrelay-mediagen` | `/skills reload` |
+| OpenClaw | `~/.openclaw/skills/cloudrelay-mediagen` | `skills/cloudrelay-mediagen` | 新会话或文件监视器刷新 |
+| Cursor | `~/.cursor/skills/cloudrelay-mediagen` | `.cursor/skills/cloudrelay-mediagen` | 新建 Agent 对话 |
 
 Gemini CLI、OpenClaw 和 Cursor 也支持项目中的 `.agents/skills/` 兼容目录。本仓库的安装器默认选择每个客户端自己的主目录，以免同一台机器上的发现优先级产生歧义。
 
@@ -86,8 +86,8 @@ Gemini CLI、OpenClaw 和 Cursor 也支持项目中的 `.agents/skills/` 兼容�
 先下载仓库：
 
 ```bash
-git clone https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill.git
-cd cloudrelay-imagegen-skill
+git clone https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill.git
+cd cloudrelay-mediagen-skill
 ```
 
 安装到单个客户端的用户目录：
@@ -139,13 +139,13 @@ python install.py --client all --force
 Gemini CLI 可以直接从 GitHub 安装仓库根目录中的 Skill：
 
 ```bash
-gemini skills install https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill
+gemini skills install https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill
 ```
 
 项目级安装：
 
 ```bash
-gemini skills install https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill --scope workspace
+gemini skills install https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill --scope workspace
 ```
 
 安装后在交互会话中执行：
@@ -155,10 +155,10 @@ gemini skills install https://github.com/CloudRelay-Code/cloudrelay-imagegen-ski
 /skills list
 ```
 
-也可以从 [Releases](https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/latest) 下载 `cloudrelay-imagegen.skill`，然后运行：
+也可以从 [Releases](https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/latest) 下载 `cloudrelay-mediagen.skill`，然后运行：
 
 ```bash
-gemini skills install /path/to/cloudrelay-imagegen.skill
+gemini skills install /path/to/cloudrelay-mediagen.skill
 ```
 
 ### OpenClaw
@@ -166,13 +166,13 @@ gemini skills install /path/to/cloudrelay-imagegen.skill
 全局安装：
 
 ```bash
-openclaw skills install git:CloudRelay-Code/cloudrelay-imagegen-skill@main --global
+openclaw skills install git:CloudRelay-Code/cloudrelay-mediagen-skill@main --global
 ```
 
 安装到当前 OpenClaw workspace：
 
 ```bash
-openclaw skills install git:CloudRelay-Code/cloudrelay-imagegen-skill@main
+openclaw skills install git:CloudRelay-Code/cloudrelay-mediagen-skill@main
 ```
 
 ### Claude Code、Cursor 和 Codex
@@ -210,13 +210,13 @@ python scripts/configure_api_key.py --provider grok --check
 Codex 和 OpenClaw 也可以显式引用：
 
 ```text
-使用 $cloudrelay-imagegen 生成一张产品主图。
+使用 $cloudrelay-mediagen 生成一张产品主图。
 ```
 
 Claude Code 可以使用对应的 Skill 命令：
 
 ```text
-/cloudrelay-imagegen 生成一张产品主图
+/cloudrelay-mediagen 生成一张产品主图
 ```
 
 Gemini CLI 首次自动激活 Skill 时会请求用户确认。Cursor 会根据 `description` 在 Agent 对话中自动发现并使用 Skill。
@@ -261,7 +261,7 @@ python -m py_compile scripts/configure_api_key.py scripts/generate_image.py inst
 python tools/package_skill.py
 ```
 
-发布前还会使用 Codex `skill-creator` 的 `quick_validate.py` 对一个名为 `cloudrelay-imagegen` 的干净运行副本进行验证。
+发布前还会使用 Codex `skill-creator` 的 `quick_validate.py` 对一个名为 `cloudrelay-mediagen` 的干净运行副本进行验证。
 
 ## 官方规范参考
 

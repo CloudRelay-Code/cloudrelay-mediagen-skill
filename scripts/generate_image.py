@@ -76,7 +76,7 @@ def _skill_version() -> str:
         return "unknown"
 
 
-USER_AGENT = f"Mozilla/5.0 (compatible; cloudrelay-imagegen-skill/{_skill_version()})"
+USER_AGENT = f"Mozilla/5.0 (compatible; cloudrelay-mediagen-skill/{_skill_version()})"
 
 
 def _is_true_flag(value: object) -> bool:

@@ -38,8 +38,8 @@ class UpdateTests(unittest.TestCase):
             "published_at": "2026-08-31T00:00:00Z",
             "assets": [
                 {
-                    "name": "cloudrelay-imagegen.skill",
-                    "browser_download_url": f"https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/v{CURRENT_VERSION}/cloudrelay-imagegen.skill",
+                    "name": "cloudrelay-mediagen.skill",
+                    "browser_download_url": f"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v{CURRENT_VERSION}/cloudrelay-mediagen.skill",
                     "digest": "sha256:" + "a" * 64,
                 }
             ],
@@ -56,7 +56,7 @@ class UpdateTests(unittest.TestCase):
         release = update_common.ReleaseInfo(
             version=update_common.parse_version(CURRENT_VERSION),
             tag_name=f"v{CURRENT_VERSION}",
-            asset_url=f"https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/download/v{CURRENT_VERSION}/cloudrelay-imagegen.skill",
+            asset_url=f"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v{CURRENT_VERSION}/cloudrelay-mediagen.skill",
             asset_digest="0" * 64,
             published_at=None,
         )
@@ -86,7 +86,7 @@ class UpdateTests(unittest.TestCase):
             update_common.parse_version("1.2.0-01")
 
     def _release_archive(self, prefix: str | None = None) -> bytes:
-        prefix = prefix or f"cloudrelay-imagegen-skill-{CURRENT_VERSION}"
+        prefix = prefix or f"cloudrelay-mediagen-skill-{CURRENT_VERSION}"
         stream = BytesIO()
         with zipfile.ZipFile(stream, "w", compression=zipfile.ZIP_DEFLATED) as archive:
             for relative in update_common.REQUIRED_FILES:

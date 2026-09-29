@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Safely check and explicitly apply a CloudRelay ImageGen release update."""
+"""Safely check and explicitly apply a CloudRelay MediaGen release update."""
 
 from __future__ import annotations
 
@@ -33,7 +33,7 @@ except ImportError:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Check and safely update an installed CloudRelay ImageGen skill."
+        description="Check and safely update an installed CloudRelay MediaGen skill."
     )
     parser.add_argument(
         "--target-dir",
@@ -67,7 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _confirm(current: str | None, latest: str) -> bool:
     answer = input(
-        f"Update CloudRelay ImageGen from {current or 'unknown'} to {latest}? [y/N] "
+        f"Update CloudRelay MediaGen from {current or 'unknown'} to {latest}? [y/N] "
     )
     return answer.strip().lower() in {"y", "yes"}
 
@@ -98,7 +98,7 @@ def main(argv: list[str] | None = None) -> int:
         current = local_version(target)
         latest = fetch_latest_release(timeout=args.timeout)
         current_text = current.normalized if current else "unknown"
-        print(f"CloudRelay ImageGen: current={current_text} latest={latest.version.normalized}")
+        print(f"CloudRelay MediaGen: current={current_text} latest={latest.version.normalized}")
 
         if current is not None:
             comparison = compare_versions(latest.version, current)
@@ -123,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"Release tag {latest.tag_name} does not match archive VERSION {staged_version.normalized}."
             )
         apply_staged_release(stage, target)
-        print(f"Updated CloudRelay ImageGen to {staged_version.normalized}: {target}")
+        print(f"Updated CloudRelay MediaGen to {staged_version.normalized}: {target}")
         print("Restart the host agent or start a new task to load the updated skill.")
         return 0
     except (UpdateError, OSError, ValueError, EOFError) as error:

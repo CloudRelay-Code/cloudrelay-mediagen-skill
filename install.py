@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install CloudRelay ImageGen into supported agent skill directories."""
+"""Install CloudRelay MediaGen into supported agent skill directories."""
 
 from __future__ import annotations
 
@@ -12,12 +12,15 @@ import sys
 from scripts._update_common import UpdateError, ensure_safe_path
 
 
-SKILL_NAME = "cloudrelay-imagegen"
+SKILL_NAME = "cloudrelay-mediagen"
 CORE_FILES = (
     Path("SKILL.md"),
     Path("VERSION"),
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
+    Path("scripts/generate_video.py"),
+    Path("references/images.md"),
+    Path("references/videos.md"),
     Path("scripts/_update_common.py"),
     Path("scripts/check_update.py"),
     Path("scripts/update.py"),
@@ -140,7 +143,7 @@ def _selected_clients(values: list[str]) -> list[str]:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Install CloudRelay ImageGen for one or more agent clients."
+        description="Install CloudRelay MediaGen for one or more agent clients."
     )
     parser.add_argument(
         "--client",
