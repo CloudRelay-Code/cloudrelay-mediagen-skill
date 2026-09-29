@@ -13,5 +13,8 @@
   "force_push": false,
   "delete_repository_or_tag": false,
   "publication_started": true,
-  "publication_started_at_utc": "2026-09-29T06:36:28.133434+00:00"
+  "publication_started_at_utc": "2026-09-29T06:36:28.133434+00:00",
+  "publication_completed": true,
+  "live_acceptance_passed": true,
+  "evidence": "docs/compatibility/publication-actions.json"
 }

@@ -229,7 +229,9 @@
       "bytes": 45139,
       "sha256": "df076d9e7cec01028700b962066009a055cf76ff30f7da6a0e8d1244d8d06691",
       "reproducible": true,
-      "real_api_digest_available": false
+      "real_api_digest_available": true,
+      "github_digest": "sha256:df076d9e7cec01028700b962066009a055cf76ff30f7da6a0e8d1244d8d06691",
+      "release_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v2.0.1"
     },
     {
       "path": "dist/cloudrelay-imagegen.skill",
@@ -239,7 +241,9 @@
       "bytes": 28933,
       "sha256": "32daf302fa70ce86b42e3444f23603df034a0f320c7a298bd6fb5d7d89507385",
       "reproducible": true,
-      "real_api_digest_available": false
+      "real_api_digest_available": true,
+      "github_digest": "sha256:32daf302fa70ce86b42e3444f23603df034a0f320c7a298bd6fb5d7d89507385",
+      "release_url": "https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill/releases/tag/v1.5.1"
     }
   ],
   "clean_copy_identity_verified": true,
@@ -286,5 +290,12 @@
       "reason": "Reload expectations split between frozen historical and current implementations.",
       "log": "docs/compatibility/validation/00-reload-hint-expectation-failure.log"
     }
-  ]
+  ],
+  "online_postpublication_verification": {
+    "status": "passed",
+    "file": "docs/compatibility/published-release-verification.json",
+    "historical_v1_5_0_live_update": true,
+    "real_user_keys_read": false,
+    "media_baseline": "Current published runtime with synthetic VERSION 2.0.0; not the historical disabled 2.0.0 updater."
+  }
 }
