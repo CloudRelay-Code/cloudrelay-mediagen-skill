@@ -1,0 +1,290 @@
+{
+  "date": "2026-09-29",
+  "platform": "Windows",
+  "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
+  "version": "2.0.1",
+  "legacy_version": "1.5.1",
+  "results": [
+    {
+      "name": "01-sync-adapters",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "tools/sync_adapters.py"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/01-sync-adapters.log"
+    },
+    {
+      "name": "02-unittest-full",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/02-unittest-full.log",
+      "total": 170,
+      "skipped": 3,
+      "failed": 0,
+      "errors": 0,
+      "passed": 167,
+      "skip_reasons": [
+        "test_provider_persistence_writes_outside_skill (test_credentials.CredentialTests.test_provider_persistence_writes_outside_skill) ... skipped 'POSIX secret-file persistence is not used on Windows'",
+        "test_native_posix_paths (test_migration.MigrationTests.test_native_posix_paths) ... skipped 'Requires a native POSIX host; forward slashes on Windows are separate'",
+        "test_apply_rejects_special_destination_file (test_update.UpdateTests.test_apply_rejects_special_destination_file) ... skipped 'FIFO special files are POSIX-only'"
+      ],
+      "suites": {
+        "test_adapters": 2,
+        "test_credentials": 10,
+        "test_dual_track": 29,
+        "test_install": 6,
+        "test_legacy_compat": 28,
+        "test_migration": 37,
+        "test_package_skill": 1,
+        "test_release_channels": 30,
+        "test_resolution": 4,
+        "test_skill_contract": 5,
+        "test_unified_protocol": 6,
+        "test_update": 12
+      }
+    },
+    {
+      "name": "03-py-compile",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-m",
+        "py_compile",
+        "scripts/configure_api_key.py",
+        "scripts/generate_image.py",
+        "scripts/generate_video.py",
+        "scripts/migrate_from_imagegen.py",
+        "scripts/_update_common.py",
+        "scripts/check_update.py",
+        "scripts/update.py",
+        "install.py",
+        "tools/package_skill.py",
+        "tools/package_legacy_skill.py",
+        "tools/sync_adapters.py",
+        "tools/verify_release_channels.py",
+        "legacy/cloudrelay-imagegen/scripts/configure_api_key.py",
+        "legacy/cloudrelay-imagegen/scripts/generate_image.py",
+        "legacy/cloudrelay-imagegen/scripts/_update_common.py",
+        "legacy/cloudrelay-imagegen/scripts/check_update.py",
+        "legacy/cloudrelay-imagegen/scripts/update.py"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/03-py-compile.log"
+    },
+    {
+      "name": "04-package-media",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "tools/package_skill.py"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/04-package-media.log"
+    },
+    {
+      "name": "05-package-legacy",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "tools/package_legacy_skill.py"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/05-package-legacy.log"
+    },
+    {
+      "name": "06-sync-adapters",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "tools/sync_adapters.py"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/06-sync-adapters.log"
+    },
+    {
+      "name": "07-unittest-full-again",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/07-unittest-full-again.log",
+      "total": 170,
+      "skipped": 3,
+      "failed": 0,
+      "errors": 0,
+      "passed": 167,
+      "skip_reasons": [
+        "test_provider_persistence_writes_outside_skill (test_credentials.CredentialTests.test_provider_persistence_writes_outside_skill) ... skipped 'POSIX secret-file persistence is not used on Windows'",
+        "test_native_posix_paths (test_migration.MigrationTests.test_native_posix_paths) ... skipped 'Requires a native POSIX host; forward slashes on Windows are separate'",
+        "test_apply_rejects_special_destination_file (test_update.UpdateTests.test_apply_rejects_special_destination_file) ... skipped 'FIFO special files are POSIX-only'"
+      ],
+      "suites": {
+        "test_adapters": 2,
+        "test_credentials": 10,
+        "test_dual_track": 29,
+        "test_install": 6,
+        "test_legacy_compat": 28,
+        "test_migration": 37,
+        "test_package_skill": 1,
+        "test_release_channels": 30,
+        "test_resolution": 4,
+        "test_skill_contract": 5,
+        "test_unified_protocol": 6,
+        "test_update": 12
+      }
+    },
+    {
+      "name": "08-video-regression",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "scripts/test_video.py",
+        "-v"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/08-video-regression.log",
+      "total": 14,
+      "skipped": 0,
+      "failed": 0,
+      "errors": 0,
+      "passed": 14,
+      "skip_reasons": [],
+      "suites": {}
+    },
+    {
+      "name": "09-installer-all-dry-run",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "install.py",
+        "--client",
+        "all",
+        "--dry-run"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/09-installer-all-dry-run.log"
+    },
+    {
+      "name": "10-quick-validate-cloudrelay-mediagen",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "C:\\Users\\Administrator\\.codex\\skills\\.system\\skill-creator\\scripts\\quick_validate.py",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cloudrelay-compat-final-aehash5z\\cloudrelay-mediagen"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/10-quick-validate-cloudrelay-mediagen.log"
+    },
+    {
+      "name": "11-quick-validate-cloudrelay-imagegen",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "C:\\Users\\Administrator\\.codex\\skills\\.system\\skill-creator\\scripts\\quick_validate.py",
+        "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cloudrelay-compat-final-aehash5z\\cloudrelay-imagegen"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/11-quick-validate-cloudrelay-imagegen.log"
+    },
+    {
+      "name": "12-ci-yaml-parse",
+      "command": [
+        "C:\\Users\\Administrator\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "-c",
+        "from pathlib import Path; import yaml; d=yaml.safe_load(Path('.github/workflows/validate.yml').read_text()); steps=d['jobs']['test']['steps']; assert any('package_legacy_skill.py' in s.get('run','') for s in steps); assert not any('release create' in s.get('run','') for s in steps); print('YAML parsed; independent legacy/media checks retained; no publication step.')"
+      ],
+      "exit_code": 0,
+      "log": "docs/compatibility/validation/12-ci-yaml-parse.log"
+    }
+  ],
+  "legacy_source_snapshot_before": {
+    "CHANGELOG.md": "027170c031c9b2556957302eeb724798333aaf4b8b9b3ae26f042d9dca29ef57",
+    "LICENSE": "414132e8539fc162d141562e15e30cf5eb4ab1ed1f2affd0745c8108d0b12bd4",
+    "PROVENANCE.json": "aeb5e8c6550c7137eb0d92e5d081ebe540aa82db72f64305febd132ec54f257c",
+    "README.md": "203994a8ceef71b23f4e13f6d1a3ce977fd4f963b9d53400cdd97c52d66e36d2",
+    "SKILL.md": "096a48ce711944860f399a04d8b1da539458412f129ce525de868ad0b55b13ed",
+    "VERSION": "dfe7d71b3f428eb73ed853f8fded65e2986896e21d69f45ebf06bb623b450e14",
+    "agents/openai.yaml": "124e1ff111d6520fe59f295eee77765e7e23de16c0f3b7f5053173f6e57ebb9a",
+    "scripts/check_update.py": "2f699163fc9154f30299557520579c455583ff150fdae868912084bbf6c0d6ae",
+    "scripts/configure_api_key.py": "d5f64556ab9708e77f64d0855f22078b71706cf3ea6ca089a0d6b1fff97e2b9f",
+    "scripts/generate_image.py": "cc5a6db22e99c8e78657284921d98b1daeafd7055df1661e34344a15e73307fe",
+    "scripts/update.ps1": "d780018ffa98fa99be6b4c329a650534f8d8fe9efaa5cdebb2047732ec9b5534",
+    "scripts/update.py": "7daeb0819bd78ea9d47e87d8f9c7de30c6f51e5aa71d93c56c655452747c97c2",
+    "scripts/update.sh": "85f365c528d4291ab7abb795b1e1263fd75f049b4680ea591e489494d4ef699a",
+    "scripts/_update_common.py": "318c9e04c21f1930f0ad7cd4c81407d24f91935b4048bdebce3d572af7b253e2"
+  },
+  "packages": [
+    {
+      "path": "dist/cloudrelay-mediagen.skill",
+      "identity": "cloudrelay-mediagen",
+      "version": "2.0.1",
+      "files": 15,
+      "bytes": 45139,
+      "sha256": "df076d9e7cec01028700b962066009a055cf76ff30f7da6a0e8d1244d8d06691",
+      "reproducible": true,
+      "real_api_digest_available": false
+    },
+    {
+      "path": "dist/cloudrelay-imagegen.skill",
+      "identity": "cloudrelay-imagegen",
+      "version": "1.5.1",
+      "files": 10,
+      "bytes": 28933,
+      "sha256": "32daf302fa70ce86b42e3444f23603df034a0f320c7a298bd6fb5d7d89507385",
+      "reproducible": true,
+      "real_api_digest_available": false
+    }
+  ],
+  "clean_copy_identity_verified": true,
+  "legacy_source_snapshot_after": {
+    "CHANGELOG.md": "027170c031c9b2556957302eeb724798333aaf4b8b9b3ae26f042d9dca29ef57",
+    "LICENSE": "414132e8539fc162d141562e15e30cf5eb4ab1ed1f2affd0745c8108d0b12bd4",
+    "PROVENANCE.json": "aeb5e8c6550c7137eb0d92e5d081ebe540aa82db72f64305febd132ec54f257c",
+    "README.md": "203994a8ceef71b23f4e13f6d1a3ce977fd4f963b9d53400cdd97c52d66e36d2",
+    "SKILL.md": "096a48ce711944860f399a04d8b1da539458412f129ce525de868ad0b55b13ed",
+    "VERSION": "dfe7d71b3f428eb73ed853f8fded65e2986896e21d69f45ebf06bb623b450e14",
+    "agents/openai.yaml": "124e1ff111d6520fe59f295eee77765e7e23de16c0f3b7f5053173f6e57ebb9a",
+    "scripts/check_update.py": "2f699163fc9154f30299557520579c455583ff150fdae868912084bbf6c0d6ae",
+    "scripts/configure_api_key.py": "d5f64556ab9708e77f64d0855f22078b71706cf3ea6ca089a0d6b1fff97e2b9f",
+    "scripts/generate_image.py": "cc5a6db22e99c8e78657284921d98b1daeafd7055df1661e34344a15e73307fe",
+    "scripts/update.ps1": "d780018ffa98fa99be6b4c329a650534f8d8fe9efaa5cdebb2047732ec9b5534",
+    "scripts/update.py": "7daeb0819bd78ea9d47e87d8f9c7de30c6f51e5aa71d93c56c655452747c97c2",
+    "scripts/update.sh": "85f365c528d4291ab7abb795b1e1263fd75f049b4680ea591e489494d4ef699a",
+    "scripts/_update_common.py": "318c9e04c21f1930f0ad7cd4c81407d24f91935b4048bdebce3d572af7b253e2"
+  },
+  "legacy_source_unchanged": true,
+  "remote_mutations": false,
+  "posix_results_file": "docs/compatibility/posix-validation.json",
+  "compiled_script_count": 17,
+  "cross_platform_validation": {
+    "distinct_main_tests": 170,
+    "distinct_video_tests": 14,
+    "distinct_total": 184,
+    "uncovered_platform_skips": 0,
+    "windows_linux_package_hashes_equal": true,
+    "details": "docs/compatibility/posix-validation.json"
+  },
+  "resolved_failure_history": [
+    {
+      "reason": "Initial missing PyYAML resolved using isolated validation dependency directory."
+    },
+    {
+      "reason": "Video import requires direct script invocation; script entry and CI corrected."
+    },
+    {
+      "reason": "Two tests passed generated legacy source as consuming stage; fixed to disposable copies and restored14 sources. Final hashes unchanged.",
+      "log": "docs/compatibility/validation/00-test-isolation-failure.log"
+    },
+    {
+      "reason": "Reload expectations split between frozen historical and current implementations.",
+      "log": "docs/compatibility/validation/00-reload-hint-expectation-failure.log"
+    }
+  ]
+}

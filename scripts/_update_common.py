@@ -16,12 +16,13 @@ import stat
 import tarfile
 import tempfile
 import time
-from urllib.parse import urlparse
+from urllib.parse import quote, urlparse
 import urllib.error
 import urllib.request
 import zipfile
 
 
+SKILL_NAME = "cloudrelay-mediagen"
 REPOSITORY = "CloudRelay-Code/cloudrelay-mediagen-skill"
 LATEST_RELEASE_URL = (
     "https://api.github.com/repos/"
@@ -47,6 +48,11 @@ MANAGED_FILES = (
     Path("agents/openai.yaml"),
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
+    Path("scripts/generate_video.py"),
+    Path("scripts/migrate_from_imagegen.py"),
+    Path("references/images.md"),
+    Path("references/videos.md"),
+    Path("references/migration.md"),
     Path("scripts/_update_common.py"),
     Path("scripts/check_update.py"),
     Path("scripts/update.py"),
@@ -59,6 +65,11 @@ REQUIRED_FILES = (
     Path("agents/openai.yaml"),
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
+    Path("scripts/generate_video.py"),
+    Path("scripts/migrate_from_imagegen.py"),
+    Path("references/images.md"),
+    Path("references/videos.md"),
+    Path("references/migration.md"),
     Path("scripts/_update_common.py"),
     Path("scripts/check_update.py"),
     Path("scripts/update.py"),
@@ -69,7 +80,7 @@ _VERSION_RE = re.compile(
     r"^[vV]?(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)"
     r"(?:-((?:0|[1-9][0-9]*|[A-Za-z-][0-9A-Za-z-]*)"
     r"(?:\.(?:0|[1-9][0-9]*|[A-Za-z-][0-9A-Za-z-]*))*))?"
-    r"(?:\+[0-9A-Za-z.-]+)?$"
+    r"(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$"
 )
 _FRONTMATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|$)", re.DOTALL)
 
@@ -84,11 +95,13 @@ class SemanticVersion:
     minor: int
     patch: int
     prerelease: tuple[str, ...] = ()
+    build: tuple[str, ...] = ()
 
     @property
     def normalized(self) -> str:
         suffix = "-" + ".".join(self.prerelease) if self.prerelease else ""
-        return f"{self.major}.{self.minor}.{self.patch}{suffix}"
+        build = "+" + ".".join(self.build) if self.build else ""
+        return f"{self.major}.{self.minor}.{self.patch}{suffix}{build}"
 
 
 @dataclass(frozen=True)
@@ -111,6 +124,7 @@ def parse_version(value: str) -> SemanticVersion:
         int(match.group(2)),
         int(match.group(3)),
         prerelease,
+        tuple(match.group(5).split(".")) if match.group(5) else (),
     )
 
 
@@ -150,6 +164,9 @@ def compare_versions(left: SemanticVersion, right: SemanticVersion) -> int:
 
 def local_version(skill_dir: Path) -> SemanticVersion | None:
     version_file = skill_dir / "VERSION"
+    ensure_safe_path(version_file)
+    if version_file.exists() and not _is_regular_file(version_file):
+        raise UpdateError("VERSION must be a regular file.")
     try:
         return parse_version(version_file.read_text(encoding="utf-8"))
     except FileNotFoundError:
@@ -158,14 +175,46 @@ def local_version(skill_dir: Path) -> SemanticVersion | None:
         raise UpdateError(f"Could not read {version_file}: {error}") from error
 
 
+_ASSET_HOSTS = frozenset({
+    "release-assets.githubusercontent.com",
+    "objects.githubusercontent.com",
+    "github-releases.githubusercontent.com",
+})
+
+
+def _validate_redirect_url(url: str, original_url: str) -> None:
+    parsed = urlparse(url)
+    if url == original_url:
+        return
+    if (original_url != LATEST_RELEASE_URL and parsed.scheme == "https"
+            and parsed.netloc in _ASSET_HOSTS and not parsed.fragment):
+        return
+    raise UpdateError("Release redirect left the trusted HTTPS channel.")
+
+
+class _ReleaseRedirectHandler(urllib.request.HTTPRedirectHandler):
+    def __init__(self, original_url: str) -> None:
+        self.original_url = original_url
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        _validate_redirect_url(newurl, self.original_url)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def _urlopen(request, *, timeout: float):
+    # Validate every hop before sending any redirected request.
+    opener = urllib.request.build_opener(_ReleaseRedirectHandler(request.full_url))
+    return opener.open(request, timeout=timeout)
+
+
+def _validate_response_url(response, original_url: str) -> None:
+    final_url = response.geturl() if hasattr(response, "geturl") else original_url
+    _validate_redirect_url(final_url, original_url)
+
+
 def _read_json_response(url: str, timeout: float) -> dict:
-    parsed_url = urlparse(url)
-    if (
-        parsed_url.scheme != "https"
-        or parsed_url.netloc != "api.github.com"
-        or not parsed_url.path.startswith("/repos/")
-    ):
-        raise UpdateError("Release URL must use the fixed api.github.com HTTPS endpoint.")
+    if url != LATEST_RELEASE_URL:
+        raise UpdateError("Release URL must use the fixed media repository HTTPS endpoint.")
     request = urllib.request.Request(
         url,
         headers={
@@ -175,8 +224,11 @@ def _read_json_response(url: str, timeout: float) -> dict:
         },
     )
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
-            raw = response.read(MAX_DOWNLOAD_BYTES)
+        with _urlopen(request, timeout=timeout) as response:
+            _validate_response_url(response, url)
+            raw = response.read(MAX_DOWNLOAD_BYTES + 1)
+            if len(raw) > MAX_DOWNLOAD_BYTES:
+                raise UpdateError("Release metadata exceeds the safety limit.")
     except urllib.error.HTTPError as error:
         raise UpdateError(f"GitHub release lookup failed (HTTP {error.code}).") from error
     except urllib.error.URLError as error:
@@ -198,11 +250,15 @@ def fetch_latest_release(
     release_url: str = LATEST_RELEASE_URL,
     asset_name: str = ASSET_NAME,
 ) -> ReleaseInfo:
+    if release_url != LATEST_RELEASE_URL or asset_name != ASSET_NAME:
+        raise UpdateError("Only the fixed cloudrelay-mediagen release channel is supported.")
     payload = _read_json_response(release_url, timeout)
     tag_name = str(payload.get("tag_name") or "").strip()
     if not tag_name:
         raise UpdateError("Latest release did not contain tag_name.")
     version = parse_version(tag_name)
+    if version.major < 2:
+        raise UpdateError("Media releases must use version 2.x or later.")
 
     assets = payload.get("assets")
     if not isinstance(assets, list):
@@ -236,17 +292,14 @@ def download_release_asset(
 ) -> bytes:
     if not release.asset_url:
         raise UpdateError(f"Release {release.tag_name} has no {ASSET_NAME} asset.")
-    parsed_url = urlparse(release.asset_url)
-    if (
-        parsed_url.scheme != "https"
-        or parsed_url.netloc != "github.com"
-        or not parsed_url.path.startswith(
-            "/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/"
-        )
-        or parsed_url.query
-        or parsed_url.fragment
-    ):
-        raise UpdateError("Release asset URL is outside the trusted GitHub repository.")
+    expected_url = (
+        f"https://github.com/{REPOSITORY}/releases/download/"
+        f"{quote(release.tag_name, safe='')}/{ASSET_NAME}"
+    )
+    if release.asset_url != expected_url:
+        raise UpdateError("Release asset URL is outside the trusted GitHub repository or tag/asset path.")
+    if release.version.major < 2 or parse_version(release.tag_name) != release.version:
+        raise UpdateError("Release tag is not a matching media version.")
     if not release.asset_digest or not re.fullmatch(r"[0-9a-f]{64}", release.asset_digest):
         raise UpdateError("Release asset does not provide a usable SHA-256 digest.")
 
@@ -258,7 +311,8 @@ def download_release_asset(
     chunks: list[bytes] = []
     size = 0
     try:
-        with urllib.request.urlopen(request, timeout=timeout) as response:
+        with _urlopen(request, timeout=timeout) as response:
+            _validate_response_url(response, release.asset_url)
             while True:
                 chunk = response.read(1024 * 1024)
                 if not chunk:
@@ -286,10 +340,18 @@ def download_release_asset(
 
 def _safe_member_path(name: str) -> PurePosixPath:
     normalized = name.replace("\\", "/")
-    path = PurePosixPath(normalized)
-    if path.is_absolute() or any(part in ("", ".", "..") for part in path.parts):
+    if normalized.endswith("/"):
+        normalized = normalized[:-1]
+    parts = normalized.split("/")
+    reserved = {"con", "prn", "aux", "nul", "conin$", "conout$"}
+    reserved.update(f"{prefix}{number}" for prefix in ("com", "lpt") for number in range(1, 10))
+    if (not normalized or any(
+            part in ("", ".", "..") or part.endswith((".", " "))
+            or any(ord(char) < 32 or char in '<>:"|?*' for char in part)
+            or part.split(".")[0].casefold() in reserved
+            for part in parts)):
         raise UpdateError(f"Unsafe archive path: {name!r}")
-    return path
+    return PurePosixPath(normalized)
 
 
 def _archive_root(paths: list[PurePosixPath]) -> PurePosixPath:
@@ -299,6 +361,8 @@ def _archive_root(paths: list[PurePosixPath]) -> PurePosixPath:
     )
     if not candidates:
         raise UpdateError("Release archive does not contain SKILL.md.")
+    if len(candidates) != 1:
+        raise UpdateError("Release archive must contain exactly one skill identity.")
     return candidates[0].parent
 
 
@@ -327,11 +391,15 @@ def _write_archive_files(archive: zipfile.ZipFile | tarfile.TarFile, destination
         members = []
         for info in archive.infolist():
             path = _safe_member_path(info.filename)
+            mode = stat.S_IFMT(info.external_attr >> 16)
             if info.is_dir():
+                if mode not in (0, stat.S_IFDIR):
+                    raise UpdateError(f"Non-regular archive entry is not allowed: {info.filename!r}")
                 continue
-            mode = (info.external_attr >> 16) & 0o170000
-            if mode == 0o120000:
+            if mode == stat.S_IFLNK:
                 raise UpdateError(f"Symlink entries are not allowed: {info.filename!r}")
+            if mode not in (0, stat.S_IFREG):
+                raise UpdateError(f"Non-regular archive entry is not allowed: {info.filename!r}")
             members.append((path, info))
         root = _archive_root([path for path, _ in members])
         seen: set[Path] = set()
@@ -401,27 +469,69 @@ def extract_release_archive(archive_bytes: bytes, destination: Path) -> None:
     validate_skill_tree(destination)
 
 
-def validate_skill_tree(skill_dir: Path) -> SemanticVersion:
-    missing = [str(path) for path in REQUIRED_FILES if not (skill_dir / path).is_file()]
-    if missing:
-        raise UpdateError("Release is missing required file(s): " + ", ".join(missing))
-
-    skill_text = (skill_dir / "SKILL.md").read_text(encoding="utf-8")
-    frontmatter = _FRONTMATTER_RE.match(skill_text)
+def validate_skill_identity(skill_dir: Path, expected_name: str = SKILL_NAME) -> str:
+    """Validate exact identity before reading state or modifying a tree."""
+    ensure_safe_path(skill_dir)
+    skill_file = skill_dir / "SKILL.md"
+    ensure_safe_path(skill_file)
+    if not _is_regular_file(skill_file):
+        raise UpdateError("Skill identity requires a regular SKILL.md file.")
+    frontmatter = _FRONTMATTER_RE.match(skill_file.read_text(encoding="utf-8"))
     if not frontmatter:
         raise UpdateError("Release SKILL.md has invalid YAML frontmatter boundaries.")
-    name_values = re.findall(r"(?m)^name:\s*(.*?)\s*$", frontmatter.group(1))
-    if len(name_values) != 1:
+    # Support canonical block-mapping keys only. Regex-only name extraction
+    # must not accept alternate YAML keys (escaped, explicit, merge or tagged)
+    # that a full YAML consumer could interpret as another identity.
+    header = frontmatter.group(1)
+    for line in header.splitlines():
+        if not line.strip() or line.startswith("#") or line[0].isspace():
+            continue
+        if not re.match(r"^[A-Za-z_][A-Za-z0-9_-]*:[ \t]*.*$", line):
+            raise UpdateError("Skill frontmatter requires canonical unquoted mapping keys.")
+    if len(re.findall(r"(?m)^name:", header)) != 1:
+        raise UpdateError("SKILL.md requires one canonical top-level name field.")
+    names = re.findall(r"(?m)^[ \t]*(?:name|[\"\']name[\"\'])[ \t]*:[ \t]*(.*?)[ \t]*$", frontmatter.group(1))
+    if len(names) != 1:
         raise UpdateError("Release SKILL.md must contain exactly one name field.")
-    name_value = name_values[0].strip().strip("'\"")
-    if name_value != "cloudrelay-mediagen":
-        raise UpdateError("Release SKILL.md is not the cloudrelay-mediagen skill.")
+    value = names[0].strip()
+    if value not in (expected_name, chr(34) + expected_name + chr(34), chr(39) + expected_name + chr(39)):
+        raise UpdateError(f"SKILL.md is not the {expected_name} skill.")
+    return expected_name
 
-    version = parse_version((skill_dir / "VERSION").read_text(encoding="utf-8"))
-    for path in skill_dir.joinpath("scripts").glob("*.py"):
+
+_MIGRATION_ADDITIONS = (Path("scripts/migrate_from_imagegen.py"), Path("references/migration.md"))
+
+
+def _required_files_for(version: SemanticVersion) -> tuple[Path, ...]:
+    # The published v2.0.0 media package predates migration. This exception is
+    # file-version compatibility within the media identity, never a legacy fallback.
+    if version == parse_version("2.0.0"):
+        return tuple(path for path in REQUIRED_FILES if path not in _MIGRATION_ADDITIONS)
+    return REQUIRED_FILES
+
+
+def validate_skill_tree(skill_dir: Path) -> SemanticVersion:
+    ensure_safe_path(skill_dir)
+    validate_skill_identity(skill_dir)
+    version = local_version(skill_dir)
+    if version is None:
+        raise UpdateError("Release is missing required VERSION file.")
+    if version.major < 2:
+        raise UpdateError("Media skill VERSION must be 2.x or later.")
+    required = _required_files_for(version)
+    for relative in MANAGED_FILES:
+        ensure_safe_path(skill_dir / relative)
+    missing = [str(path) for path in required if not _is_regular_file(skill_dir / path)]
+    if missing:
+        raise UpdateError("Release is missing required regular file(s): " + ", ".join(missing))
+    for relative in MANAGED_FILES:
+        path = skill_dir / relative
+        if path.exists() and not _is_regular_file(path):
+            raise UpdateError(f"Release contains a non-regular file: {relative}")
+        if relative.suffix != ".py" or not path.exists():
+            continue
         try:
-            source = path.read_text(encoding="utf-8")
-            compile(source, str(path), "exec")
+            compile(path.read_text(encoding="utf-8"), str(path), "exec")
         except (OSError, SyntaxError) as error:
             raise UpdateError(f"Release Python validation failed for {path.name}: {error}") from error
     return version
@@ -587,11 +697,14 @@ def _update_lock(target: Path):
 def apply_staged_release(stage: Path, target: Path) -> None:
     ensure_safe_path(stage)
     _ensure_no_link_components(target)
+    if stage == target or stage in target.parents or target in stage.parents:
+        raise UpdateError("Staging and installed skill directories must be disjoint.")
     staged_version = validate_skill_tree(stage)
     backup = None
     replaced: list[Path] = []
     try:
         with _update_lock(target):
+            validate_skill_identity(target)
             current_version = local_version(target)
             if current_version is not None and compare_versions(staged_version, current_version) < 0:
                 raise UpdateError(
@@ -603,6 +716,8 @@ def apply_staged_release(stage: Path, target: Path) -> None:
                 for relative in MANAGED_FILES:
                     source = stage / relative
                     if not source.is_file():
+                        if relative not in _required_files_for(staged_version):
+                            continue  # Preserve any existing optional migration files.
                         raise UpdateError(f"Staged release is missing {relative}.")
                     destination = target / relative
                     _ensure_no_link_components(destination)

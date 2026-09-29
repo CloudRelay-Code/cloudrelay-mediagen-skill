@@ -152,11 +152,14 @@ class VideoTests(unittest.TestCase):
             self.assertEqual(video.main(['--prompt', 'x', '--output-dir', tmp]), 1)
             self.assertEqual(request.call_count, 2)
 
-    def test_legacy_update_does_not_fetch_or_apply(self):
-        for module, argv in ((update, ['--auto']), (check_update, ['--json'])):
-            with patch.object(module, 'fetch_latest_release') as fetch, contextlib.redirect_stdout(io.StringIO()):
-                self.assertEqual(module.main(argv), 0)
-                fetch.assert_not_called()
+    def test_legacy_target_does_not_fetch_or_apply(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp)
+            (target / 'SKILL.md').write_text('---\nname: cloudrelay-imagegen\ndescription: Legacy\n---\n', encoding='utf-8')
+            for module, argv in ((update, ['--auto']), (check_update, ['--json'])):
+                with patch.object(module, 'fetch_latest_release') as fetch, contextlib.redirect_stderr(io.StringIO()):
+                    self.assertEqual(module.main(argv + ['--target-dir', str(target)]), 1)
+                    fetch.assert_not_called()
 
 
 if __name__ == '__main__':

@@ -19,13 +19,25 @@ jobs:
       - name: Install validation dependency
         run: python -m pip install -r requirements-dev.txt
       - name: Compile scripts
-        run: python -m py_compile scripts/configure_api_key.py scripts/generate_image.py scripts/_update_common.py scripts/check_update.py scripts/update.py install.py tools/package_skill.py tools/sync_adapters.py
+        run: python -m py_compile scripts/configure_api_key.py scripts/generate_image.py scripts/generate_video.py scripts/migrate_from_imagegen.py scripts/_update_common.py scripts/check_update.py scripts/update.py install.py tools/package_skill.py tools/sync_adapters.py tools/verify_release_channels.py
+      - name: Compile independent legacy runtime and builder
+        run: python -m py_compile legacy/cloudrelay-imagegen/scripts/configure_api_key.py legacy/cloudrelay-imagegen/scripts/generate_image.py legacy/cloudrelay-imagegen/scripts/_update_common.py legacy/cloudrelay-imagegen/scripts/check_update.py legacy/cloudrelay-imagegen/scripts/update.py tools/package_legacy_skill.py
       - name: Run tests
         run: python -m unittest discover -s tests -v
+      - name: Video workflow regression
+        run: python scripts/test_video.py -v
       - name: Exercise installer mapping
         run: python install.py --client all --dry-run
-      - name: Build distributable skill
-        run: python tools/package_skill.py
+      - name: Build media distributable skill
+        run: python tools/package_skill.py --output-dir dist/media
+      - name: Verify media distributable identity and manifest
+        run: >-
+          python -c "from pathlib import Path; import zipfile; from tools import package_skill as builder; output = Path('dist/media'); assert {p.name for p in output.glob('*.skill')} == {'cloudrelay-mediagen.skill'}; archive = zipfile.ZipFile(output / 'cloudrelay-mediagen.skill'); assert set(archive.namelist()) == {p.as_posix() for p in builder.PACKAGE_FILES}; skill = archive.read('SKILL.md').decode('utf-8'); assert 'name: cloudrelay-mediagen' in skill; assert 'name: cloudrelay-imagegen' not in skill; assert int(archive.read('VERSION').decode('ascii').strip().split('.')[0]) >= 2; archive.close()"
+      - name: Build independent legacy distributable skill
+        run: python tools/package_legacy_skill.py --source-root legacy/cloudrelay-imagegen --output-dir dist/legacy
+      - name: Verify legacy distributable identity and manifest
+        run: >-
+          python -c "from pathlib import Path; import zipfile; from tools import package_legacy_skill as builder; output = Path('dist/legacy'); assert {p.name for p in output.glob('*.skill')} == {'cloudrelay-imagegen.skill'}; archive = zipfile.ZipFile(output / 'cloudrelay-imagegen.skill'); assert set(archive.namelist()) == {p.as_posix() for p in builder.PACKAGE_FILES}; skill = archive.read('SKILL.md').decode('utf-8'); assert 'name: cloudrelay-imagegen' in skill; assert 'name: cloudrelay-mediagen' not in skill; assert archive.read('VERSION').decode('ascii').strip().split('.')[:2] == ['1', '5']; archive.close()"
       - name: Synchronize adapter copies
         run: python tools/sync_adapters.py
       - name: Verify adapter copies are committed

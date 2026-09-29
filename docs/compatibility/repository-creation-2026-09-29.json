@@ -1,0 +1,71 @@
+{
+  "checked_at": "2026-09-29T06:05:44.327051+00:00",
+  "authorized_action": "Create public CloudRelay-Code/cloudrelay-imagegen-skill only",
+  "repository_created": true,
+  "code_pushed": false,
+  "tags_created_or_pushed": false,
+  "release_created_or_modified": false,
+  "commands": [
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-imagegen-skill",
+        "--jq",
+        "{full_name: .full_name, id: .id, private: .private, html_url: .html_url, created_at: .created_at, default_branch: .default_branch}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"created_at\":\"2026-09-29T06:04:30Z\",\"default_branch\":\"main\",\"full_name\":\"CloudRelay-Code/cloudrelay-imagegen-skill\",\"html_url\":\"https://github.com/CloudRelay-Code/cloudrelay-imagegen-skill\",\"id\":1394481012,\"private\":false}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-imagegen-skill/branches",
+        "--jq",
+        "[.[] | .name]"
+      ],
+      "exit_code": 0,
+      "stdout": "[]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-imagegen-skill/releases",
+        "--jq",
+        "[.[] | {tag_name, name}]"
+      ],
+      "exit_code": 0,
+      "stdout": "[]\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-imagegen-skill/releases/latest"
+      ],
+      "exit_code": 1,
+      "stdout": "{\"message\":\"Not Found\",\"documentation_url\":\"https://docs.github.com/rest/releases/releases#get-the-latest-release\",\"status\":\"404\"}",
+      "stderr": "gh: Not Found (HTTP 404)\n"
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-mediagen-skill/releases/latest",
+        "--jq",
+        "{tag_name: .tag_name, assets: [.assets[] | {name, digest}]}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"assets\":[{\"digest\":\"sha256:ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2\",\"name\":\"cloudrelay-mediagen.skill\"}],\"tag_name\":\"v2.0.0\"}\n",
+      "stderr": ""
+    }
+  ],
+  "independent_legacy_repository_verified": true,
+  "legacy_latest_status": "404: no release published yet",
+  "media_latest_unchanged": true
+}

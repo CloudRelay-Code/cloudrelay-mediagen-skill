@@ -7,9 +7,11 @@ import argparse
 from dataclasses import dataclass
 from pathlib import Path
 import shutil
+import stat
+import tempfile
 import sys
 
-from scripts._update_common import UpdateError, ensure_safe_path
+from scripts._update_common import UpdateError, ensure_safe_path, validate_skill_identity
 
 
 SKILL_NAME = "cloudrelay-mediagen"
@@ -19,6 +21,8 @@ CORE_FILES = (
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
     Path("scripts/generate_video.py"),
+    Path("scripts/migrate_from_imagegen.py"),
+    Path("references/migration.md"),
     Path("references/images.md"),
     Path("references/videos.md"),
     Path("scripts/_update_common.py"),
@@ -41,7 +45,7 @@ CLIENTS = {
     "codex": ClientSpec(
         Path(".codex/skills"),
         Path(".agents/skills"),
-        "Restart Codex or start a new task.",
+        "Skills reload automatically; restart Codex if the skill is missing.",
     ),
     "claude-code": ClientSpec(
         Path(".claude/skills"),
@@ -56,12 +60,12 @@ CLIENTS = {
     "openclaw": ClientSpec(
         Path(".openclaw/skills"),
         Path("skills"),
-        "Start a new OpenClaw session or wait for its skill watcher to reload.",
+        "Wait for the skill watcher and the next Agent turn; restart the Gateway if watching is disabled.",
     ),
     "cursor": ClientSpec(
         Path(".cursor/skills"),
         Path(".cursor/skills"),
-        "Start a new Cursor Agent chat.",
+        "Restart Cursor, then confirm the skill is listed.",
     ),
 }
 
@@ -89,11 +93,36 @@ def _validate_source(source_root: Path, client: str) -> tuple[Path, ...]:
         raise InstallError("Missing required source file(s): " + ", ".join(missing))
     try:
         ensure_safe_path(source_root)
+        validate_skill_identity(source_root, SKILL_NAME)
         for relative in files:
             ensure_safe_path(source_root / relative)
+            if not stat.S_ISREG((source_root / relative).lstat().st_mode):
+                raise InstallError(f"Source is not a regular file: {relative}")
     except UpdateError as error:
         raise InstallError(str(error)) from error
     return files
+
+
+def _validate_destination(destination: Path, files: tuple[Path, ...]) -> None:
+    try:
+        ensure_safe_path(destination)
+        if destination.exists():
+            if not destination.is_dir():
+                raise InstallError("Destination must be a skill directory.")
+            if (destination / "SKILL.md").exists():
+                validate_skill_identity(destination, SKILL_NAME)
+            elif any(destination.iterdir()):
+                raise InstallError("Refusing a nonempty destination without a media skill identity.")
+        for relative in files:
+            target = destination / relative
+            ensure_safe_path(target)
+            for parent in target.parents:
+                if parent.exists() and not parent.is_dir():
+                    raise InstallError(f"Destination parent is not a directory: {parent}")
+            if target.exists() and not stat.S_ISREG(target.lstat().st_mode):
+                raise InstallError(f"Refusing to replace a non-regular file: {target}")
+    except UpdateError as error:
+        raise InstallError(str(error)) from error
 
 
 def install_client(
@@ -113,6 +142,7 @@ def install_client(
         home=home,
         project_dir=project_dir,
     )
+    _validate_destination(destination, files)
     if destination.exists() and not force and not dry_run:
         raise InstallError(
             f"Destination already exists: {destination}. Re-run with --force to update known files."
@@ -129,7 +159,17 @@ def install_client(
             if target.exists() and not target.is_file():
                 raise InstallError(f"Refusing to replace a non-regular file: {target}")
             target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.copy2(source_root / relative_path, target)
+            # Replace the directory entry, never truncate a possible hard link
+            # to an unrelated user file (same convention as the updater).
+            with tempfile.NamedTemporaryFile(prefix=".cloudrelay-install-", dir=target.parent, delete=False) as stream:
+                temporary = Path(stream.name)
+            try:
+                shutil.copy2(source_root / relative_path, temporary)
+                ensure_safe_path(target)
+                temporary.replace(target)
+            finally:
+                if temporary.exists():
+                    temporary.unlink()
     except UpdateError as error:
         raise InstallError(str(error)) from error
     return destination
@@ -197,7 +237,8 @@ def main(argv: list[str] | None = None) -> int:
             for client in clients
         ]
         for client, destination in destinations:
-            _validate_source(source_root, client)
+            files = _validate_source(source_root, client)
+            _validate_destination(destination, files)
             if destination.exists() and not args.force and not args.dry_run:
                 raise InstallError(
                     f"Destination already exists: {destination}. "

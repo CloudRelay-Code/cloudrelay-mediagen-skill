@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "status": "v1.5.1 release source; publication and online verification tracked separately",
+  "version": "1.5.1",
+  "repository": "CloudRelay-Code/cloudrelay-imagegen-skill",
+  "asset": "cloudrelay-imagegen.skill",
+  "skill_name": "cloudrelay-imagegen",
+  "source_tag": "v1.5.0",
+  "source_tag_object": "1a3d213f841cdb93131dfa42f5803473554f9f39",
+  "source_commit": "2f2d6a077dc2acda21fff2896f144a075d9a3f72",
+  "method": "Original runtime materialized from verified fixture bytes and compared to git show of the peeled historical commit; only VERSION and the three updater/checker scripts change.",
+  "unchanged_files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "096a48ce711944860f399a04d8b1da539458412f129ce525de868ad0b55b13ed",
+      "size_bytes": 12037
+    },
+    {
+      "path": "agents/openai.yaml",
+      "sha256": "124e1ff111d6520fe59f295eee77765e7e23de16c0f3b7f5053173f6e57ebb9a",
+      "size_bytes": 302
+    },
+    {
+      "path": "scripts/configure_api_key.py",
+      "sha256": "d5f64556ab9708e77f64d0855f22078b71706cf3ea6ca089a0d6b1fff97e2b9f",
+      "size_bytes": 7897
+    },
+    {
+      "path": "scripts/generate_image.py",
+      "sha256": "cc5a6db22e99c8e78657284921d98b1daeafd7055df1661e34344a15e73307fe",
+      "size_bytes": 31432
+    },
+    {
+      "path": "scripts/update.ps1",
+      "sha256": "d780018ffa98fa99be6b4c329a650534f8d8fe9efaa5cdebb2047732ec9b5534",
+      "size_bytes": 162
+    },
+    {
+      "path": "scripts/update.sh",
+      "sha256": "85f365c528d4291ab7abb795b1e1263fd75f049b4680ea591e489494d4ef699a",
+      "size_bytes": 124
+    }
+  ],
+  "updated_files": [
+    "VERSION",
+    "scripts/_update_common.py",
+    "scripts/check_update.py",
+    "scripts/update.py"
+  ],
+  "hardening_basis": {
+    "path": "scripts/_update_common.py in the parent repository working tree",
+    "sha256": "973db917da2da4e66c5abb378b6d9b54d121435c0dd7216756846a901abff003",
+    "method": "Adapted once during development into independent literal-fixed legacy source; no runtime source import or identity transformation.",
+    "subsequent_changes": [
+      "Preserve validated semantic-version build identifiers, reject empty build identifiers, and require full version equality including build metadata for release-tag and archive checks."
+    ]
+  },
+  "managed_files": [
+    "SKILL.md",
+    "VERSION",
+    "agents/openai.yaml",
+    "scripts/configure_api_key.py",
+    "scripts/generate_image.py",
+    "scripts/_update_common.py",
+    "scripts/check_update.py",
+    "scripts/update.py",
+    "scripts/update.ps1",
+    "scripts/update.sh"
+  ]
+}

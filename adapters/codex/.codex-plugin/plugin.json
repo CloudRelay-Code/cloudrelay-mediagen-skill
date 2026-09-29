@@ -1,6 +1,6 @@
 {
   "name": "cloudrelay-mediagen-codex",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "CloudRelay unified GPT, Gemini, and Grok image and video generation for Codex.",
   "author": {
     "name": "CloudRelay Code"
@@ -12,7 +12,10 @@
     "longDescription": "Discover provider capabilities, submit asynchronous image and video tasks, and save verified results.",
     "developerName": "CloudRelay Code",
     "category": "Productivity",
-    "capabilities": ["Read", "Write"],
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
     "defaultPrompt": "Use CloudRelay MediaGen for this image or video-generation request."
   }
 }

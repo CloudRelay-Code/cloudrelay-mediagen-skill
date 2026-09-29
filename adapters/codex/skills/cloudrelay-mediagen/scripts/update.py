@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import shutil
 from pathlib import Path
 import sys
 
@@ -15,6 +16,8 @@ try:
         download_release_asset,
         fetch_latest_release,
         local_version,
+        parse_version,
+        validate_skill_identity,
         stage_release,
         ensure_safe_path,
     )
@@ -26,6 +29,8 @@ except ImportError:
         download_release_asset,
         fetch_latest_release,
         local_version,
+        parse_version,
+        validate_skill_identity,
         stage_release,
         ensure_safe_path,
     )
@@ -77,9 +82,6 @@ def main(argv: list[str] | None = None) -> int:
     # Keep symlink/junction components visible to the safety check. Resolving
     # first would silently turn a linked target into an unrelated real path.
     target = args.target_dir.expanduser().absolute()
-    if (target / "SKILL.md").is_file() and "name: cloudrelay-mediagen" in (target / "SKILL.md").read_text(encoding="utf-8"):
-        print("Local media variant: legacy image-only release updates are disabled; no compatible media release source is configured.")
-        return 0
     if args.yes and not (args.apply or args.auto):
         print("Update failed: --yes requires --apply or --auto.", file=sys.stderr)
         return 1
@@ -95,6 +97,7 @@ def main(argv: list[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return 1
+        validate_skill_identity(target)
         current = local_version(target)
         latest = fetch_latest_release(timeout=args.timeout)
         current_text = current.normalized if current else "unknown"
@@ -118,11 +121,15 @@ def main(argv: list[str] | None = None) -> int:
 
         archive = download_release_asset(latest, timeout=args.timeout)
         stage, staged_version = stage_release(archive, target.parent)
-        if compare_versions(staged_version, latest.version) != 0:
-            raise UpdateError(
-                f"Release tag {latest.tag_name} does not match archive VERSION {staged_version.normalized}."
-            )
-        apply_staged_release(stage, target)
+        try:
+            if staged_version != latest.version or staged_version != parse_version(latest.tag_name):
+                raise UpdateError(
+                    f"Release tag {latest.tag_name} does not match archive VERSION {staged_version.normalized}."
+                )
+            apply_staged_release(stage, target)
+        finally:
+            if stage.exists():
+                shutil.rmtree(stage)
         print(f"Updated CloudRelay MediaGen to {staged_version.normalized}: {target}")
         print("Restart the host agent or start a new task to load the updated skill.")
         return 0

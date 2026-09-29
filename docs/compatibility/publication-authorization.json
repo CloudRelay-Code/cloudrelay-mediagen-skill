@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-09-29T06:15:10.958481+00:00",
+  "user_confirmation": "Explicit affirmative response to the proposed dual-track source/tag pushes and v1.5.1/v2.0.1 Releases",
+  "authorized_repositories": [
+    "CloudRelay-Code/cloudrelay-imagegen-skill",
+    "CloudRelay-Code/cloudrelay-mediagen-skill"
+  ],
+  "authorized_tags": [
+    "v1.5.1",
+    "v2.0.1"
+  ],
+  "existing_releases_to_modify": [],
+  "force_push": false,
+  "delete_repository_or_tag": false,
+  "publication_started": true,
+  "publication_started_at_utc": "2026-09-29T06:36:28.133434+00:00"
+}

@@ -1,0 +1,230 @@
+Discovered platform=gpt image_generation_allowed=True models=0
+Discovered platform=gpt image_generation_allowed=True models=1
+  id=gpt-image-2.5-flare kind=image endpoint=images async=True
+Discovered platform=gpt image_generation_allowed=True models=1
+  id=gpt-image-2.5-flare kind=text endpoint=images async=True
+Discovered platform=gpt image_generation_allowed=True models=1
+  id=gpt-image-2.5-flare kind=image endpoint=chat async=True
+Discovered platform=gpt image_generation_allowed=True models=1
+  id=gpt-image-2.5-flare kind=image endpoint=images async=False
+Discovered platform=gemini image_generation_allowed=True models=1
+  id=gemini-3.1-flash-image-preview kind=image endpoint=images async=True
+Discovered platform=gemini image_generation_allowed=True models=1
+  id=gemini-3.1-flash-image-preview kind=text endpoint=images async=True
+Discovered platform=gemini image_generation_allowed=True models=1
+  id=gemini-3.1-flash-image-preview kind=image endpoint=chat async=True
+Discovered platform=gemini image_generation_allowed=True models=1
+  id=gemini-3.1-flash-image-preview kind=image endpoint=images async=False
+Discovered platform=grok image_generation_allowed=True models=1
+  id=grok-imagine-image-2.0 kind=image endpoint=images async=True
+Discovered platform=grok image_generation_allowed=True models=1
+  id=grok-imagine-image-2.0 kind=text endpoint=images async=True
+Discovered platform=grok image_generation_allowed=True models=1
+  id=grok-imagine-image-2.0 kind=image endpoint=chat async=True
+Discovered platform=grok image_generation_allowed=True models=1
+  id=grok-imagine-image-2.0 kind=image endpoint=images async=False
+Submitted unified image task=task-123 status=queued
+Submitted unified image task=task-123 status=queued
+Submitted unified image task=task-123 status=queued
+test_adapter_manifests_and_copies_match_root_version (test_adapters.AdapterTests.test_adapter_manifests_and_copies_match_root_version) ... ok
+test_sync_rejects_symlinked_source (test_adapters.AdapterTests.test_sync_rejects_symlinked_source) ... ok
+test_api_keys_are_isolated_by_provider (test_credentials.CredentialTests.test_api_keys_are_isolated_by_provider) ... ok
+test_empty_secret_file_is_treated_as_missing (test_credentials.CredentialTests.test_empty_secret_file_is_treated_as_missing) ... ok
+test_generator_reads_xdg_secret_file (test_credentials.CredentialTests.test_generator_reads_xdg_secret_file) ... ok
+test_gpt_does_not_fall_back_to_other_channel_key (test_credentials.CredentialTests.test_gpt_does_not_fall_back_to_other_channel_key) ... ok
+test_key_stdin_reader_does_not_use_command_line_arguments (test_credentials.CredentialTests.test_key_stdin_reader_does_not_use_command_line_arguments) ... ok
+test_key_validation_rejects_internal_whitespace (test_credentials.CredentialTests.test_key_validation_rejects_internal_whitespace) ... ok
+test_key_validation_trims_outer_whitespace (test_credentials.CredentialTests.test_key_validation_trims_outer_whitespace) ... ok
+test_legacy_generic_environment_key_is_not_used (test_credentials.CredentialTests.test_legacy_generic_environment_key_is_not_used) ... ok
+test_provider_environment_names_and_secret_files_are_distinct (test_credentials.CredentialTests.test_provider_environment_names_and_secret_files_are_distinct) ... ok
+test_provider_persistence_writes_outside_skill (test_credentials.CredentialTests.test_provider_persistence_writes_outside_skill) ... skipped 'POSIX secret-file persistence is not used on Windows'
+test_archives_have_disjoint_identities_and_fixed_runtime_manifests (test_dual_track.DualTrackTests.test_archives_have_disjoint_identities_and_fixed_runtime_manifests) ... ok
+test_atomic_failure_preserves_prior_asset_and_cleans_temporary (test_dual_track.DualTrackTests.test_atomic_failure_preserves_prior_asset_and_cleans_temporary) ... ok
+test_both_archives_are_deterministic_and_digest_downloadable (test_dual_track.DualTrackTests.test_both_archives_are_deterministic_and_digest_downloadable) ... ok
+test_each_builder_rejects_other_source_without_fallback (test_dual_track.DualTrackTests.test_each_builder_rejects_other_source_without_fallback) ... ok
+test_fixed_independent_manifests_match_original_ten (test_dual_track.DualTrackTests.test_fixed_independent_manifests_match_original_ten) ... ok
+test_hardened_legacy_archive_missing_traversal_and_symlink_rejected (test_dual_track.DualTrackTests.test_hardened_legacy_archive_missing_traversal_and_symlink_rejected) ... ok
+test_hardened_legacy_preserves_valid_build_metadata_normalization (test_dual_track.DualTrackTests.test_hardened_legacy_preserves_valid_build_metadata_normalization) ... ok
+test_hardened_legacy_rejects_distinct_tag_archive_build_metadata (test_dual_track.DualTrackTests.test_hardened_legacy_rejects_distinct_tag_archive_build_metadata) ... ok
+test_hardened_legacy_rejects_media_archive_and_media_rejects_legacy (test_dual_track.DualTrackTests.test_hardened_legacy_rejects_media_archive_and_media_rejects_legacy) ... ok
+test_hardened_legacy_rejects_media_only_asset_without_channel_fallback (test_dual_track.DualTrackTests.test_hardened_legacy_rejects_media_only_asset_without_channel_fallback) ... ok
+test_hardened_legacy_rejects_media_target_before_modification (test_dual_track.DualTrackTests.test_hardened_legacy_rejects_media_target_before_modification) ... ok
+test_hardened_legacy_rejects_non_15_release_and_archive_versions (test_dual_track.DualTrackTests.test_hardened_legacy_rejects_non_15_release_and_archive_versions) ... ok
+test_hardened_legacy_rejects_other_repository_asset_http_and_tag_urls (test_dual_track.DualTrackTests.test_hardened_legacy_rejects_other_repository_asset_http_and_tag_urls) ... ok
+test_hardened_legacy_requests_only_old_metadata_and_asset (test_dual_track.DualTrackTests.test_hardened_legacy_requests_only_old_metadata_and_asset) ... ok
+test_hardened_legacy_tag_archive_mismatch_preserves_target (test_dual_track.DualTrackTests.test_hardened_legacy_tag_archive_mismatch_preserves_target) ... ok
+test_legacy_builder_default_is_independent_of_current_directory (test_dual_track.DualTrackTests.test_legacy_builder_default_is_independent_of_current_directory) ... ok
+test_legacy_builder_parses_but_never_executes_source (test_dual_track.DualTrackTests.test_legacy_builder_parses_but_never_executes_source) ... ok
+test_legacy_builder_rejects_ambiguous_skill_names (test_dual_track.DualTrackTests.test_legacy_builder_rejects_ambiguous_skill_names) ... ok
+test_legacy_builder_rejects_broken_runtime_python (test_dual_track.DualTrackTests.test_legacy_builder_rejects_broken_runtime_python) ... ok
+test_legacy_builder_rejects_dynamic_or_expanded_manifests (test_dual_track.DualTrackTests.test_legacy_builder_rejects_dynamic_or_expanded_manifests) ... ok
+test_legacy_builder_rejects_junction_before_source_read (test_dual_track.DualTrackTests.test_legacy_builder_rejects_junction_before_source_read) ... ok
+test_legacy_builder_rejects_non_regular_source_and_output (test_dual_track.DualTrackTests.test_legacy_builder_rejects_non_regular_source_and_output) ... ok
+test_legacy_builder_rejects_source_file_symlink (test_dual_track.DualTrackTests.test_legacy_builder_rejects_source_file_symlink) ... ok
+test_legacy_builder_rejects_symlink_source_and_output (test_dual_track.DualTrackTests.test_legacy_builder_rejects_symlink_source_and_output) ... ok
+test_legacy_builder_rejects_wrong_identity_version_and_channel_literals (test_dual_track.DualTrackTests.test_legacy_builder_rejects_wrong_identity_version_and_channel_literals) ... ok
+test_missing_legacy_file_never_creates_either_asset (test_dual_track.DualTrackTests.test_missing_legacy_file_never_creates_either_asset) ... ok
+test_missing_media_file_never_falls_back_to_legacy (test_dual_track.DualTrackTests.test_missing_media_file_never_falls_back_to_legacy) ... ok
+test_original_updater_fetches_downloads_stages_and_applies_candidate (test_dual_track.DualTrackTests.test_original_updater_fetches_downloads_stages_and_applies_candidate) ... ok
+test_original_updater_rejects_wrong_candidate_digest_without_writes (test_dual_track.DualTrackTests.test_original_updater_rejects_wrong_candidate_digest_without_writes) ... ok
+test_dry_run_allows_an_existing_destination (test_install.InstallTests.test_dry_run_allows_an_existing_destination) ... ok
+test_dry_run_does_not_create_destination (test_install.InstallTests.test_dry_run_does_not_create_destination) ... ok
+test_existing_destination_requires_force (test_install.InstallTests.test_existing_destination_requires_force) ... ok
+test_install_copies_only_runtime_files (test_install.InstallTests.test_install_copies_only_runtime_files) ... ok
+test_project_destinations_match_client_conventions (test_install.InstallTests.test_project_destinations_match_client_conventions) ... ok
+test_user_destinations_match_client_conventions (test_install.InstallTests.test_user_destinations_match_client_conventions) ... ok
+test_absent_or_malformed_sha256_is_rejected_before_download (test_legacy_compat.LegacyCompatibilityTests.test_absent_or_malformed_sha256_is_rejected_before_download) ... ok
+test_apply_overwrites_only_managed_files_and_preserves_all_user_data (test_legacy_compat.LegacyCompatibilityTests.test_apply_overwrites_only_managed_files_and_preserves_all_user_data) ... ok
+test_apply_refuses_downgrade_and_preserves_target (test_legacy_compat.LegacyCompatibilityTests.test_apply_refuses_downgrade_and_preserves_target) ... ok
+test_archive_accepts_real_legacy_identity (test_legacy_compat.LegacyCompatibilityTests.test_archive_accepts_real_legacy_identity) ... ok
+test_archive_rejects_each_missing_required_file (test_legacy_compat.LegacyCompatibilityTests.test_archive_rejects_each_missing_required_file) ... ok
+test_archive_rejects_media_identity (test_legacy_compat.LegacyCompatibilityTests.test_archive_rejects_media_identity) ... ok
+test_archive_rejects_path_traversal_before_any_file_is_written (test_legacy_compat.LegacyCompatibilityTests.test_archive_rejects_path_traversal_before_any_file_is_written) ... ok
+test_both_identities_resolve_shared_external_key_names_without_reading_keys (test_legacy_compat.LegacyCompatibilityTests.test_both_identities_resolve_shared_external_key_names_without_reading_keys) ... ok
+test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) ... 
+  test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) (skill='cloudrelay-mediagen', client='codex') ... FAIL
+  test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) (skill='cloudrelay-mediagen', client='openclaw') ... FAIL
+  test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) (skill='cloudrelay-mediagen', client='cursor') ... FAIL
+test_cli_applies_legacy_release_and_reports_reload (test_legacy_compat.LegacyCompatibilityTests.test_cli_applies_legacy_release_and_reports_reload) ... ok
+test_cli_refuses_downgrade_before_downloading (test_legacy_compat.LegacyCompatibilityTests.test_cli_refuses_downgrade_before_downloading) ... ok
+test_cli_rejects_release_tag_and_archive_version_mismatch (test_legacy_compat.LegacyCompatibilityTests.test_cli_rejects_release_tag_and_archive_version_mismatch) ... ok
+test_correct_sha256_download_succeeds_at_old_asset_url (test_legacy_compat.LegacyCompatibilityTests.test_correct_sha256_download_succeeds_at_old_asset_url) ... ok
+test_current_and_historical_installers_coexist_for_every_client (test_legacy_compat.LegacyCompatibilityTests.test_current_and_historical_installers_coexist_for_every_client) ... ok
+test_fixture_commands_run_outside_git_without_path_executables (test_legacy_compat.LegacyCompatibilityTests.test_fixture_commands_run_outside_git_without_path_executables) ... ok
+test_fixture_contains_no_discoverable_skill_or_user_state (test_legacy_compat.LegacyCompatibilityTests.test_fixture_contains_no_discoverable_skill_or_user_state) ... ok
+test_fixture_hashes_and_full_commit_provenance (test_legacy_compat.LegacyCompatibilityTests.test_fixture_hashes_and_full_commit_provenance) ... ok
+test_historical_builder_uses_fixed_legacy_name_and_file_manifest (test_legacy_compat.LegacyCompatibilityTests.test_historical_builder_uses_fixed_legacy_name_and_file_manifest) ... ok
+test_historical_channel_constants_and_managed_file_limits (test_legacy_compat.LegacyCompatibilityTests.test_historical_channel_constants_and_managed_file_limits) ... ok
+test_historical_checker_reports_old_channel_without_writes (test_legacy_compat.LegacyCompatibilityTests.test_historical_checker_reports_old_channel_without_writes) ... ok
+test_known_legacy_limit_apply_does_not_validate_target_identity (test_legacy_compat.LegacyCompatibilityTests.test_known_legacy_limit_apply_does_not_validate_target_identity) ... ok
+test_known_legacy_limit_zip_special_modes_are_materialized_as_regular_files (test_legacy_compat.LegacyCompatibilityTests.test_known_legacy_limit_zip_special_modes_are_materialized_as_regular_files) ... ok
+test_latest_request_uses_fixed_old_repository_and_asset (test_legacy_compat.LegacyCompatibilityTests.test_latest_request_uses_fixed_old_repository_and_asset) ... ok
+test_media_only_release_does_not_switch_legacy_asset_channel (test_legacy_compat.LegacyCompatibilityTests.test_media_only_release_does_not_switch_legacy_asset_channel) ... ok
+test_renamed_repository_and_other_untrusted_urls_are_rejected (test_legacy_compat.LegacyCompatibilityTests.test_renamed_repository_and_other_untrusted_urls_are_rejected) ... ok
+test_tar_archive_rejects_nonregular_entries (test_legacy_compat.LegacyCompatibilityTests.test_tar_archive_rejects_nonregular_entries) ... ok
+test_wrong_sha256_download_is_rejected (test_legacy_compat.LegacyCompatibilityTests.test_wrong_sha256_download_is_rejected) ... ok
+test_zip_archive_rejects_symlinks_even_for_unmanaged_entries (test_legacy_compat.LegacyCompatibilityTests.test_zip_archive_rejects_symlinks_even_for_unmanaged_entries) ... ok
+test_cli_default_and_dry_run_are_nonmutating (test_migration.MigrationTests.test_cli_default_and_dry_run_are_nonmutating) ... ok
+test_cli_reports_identity_refusal (test_migration.MigrationTests.test_cli_reports_identity_refusal) ... ok
+test_cli_yes_requires_separate_install_for_absent_target (test_migration.MigrationTests.test_cli_yes_requires_separate_install_for_absent_target) ... ok
+test_conflicting_directory_is_never_removed (test_migration.MigrationTests.test_conflicting_directory_is_never_removed) ... ok
+test_conflicting_user_file_is_never_overwritten_or_read (test_migration.MigrationTests.test_conflicting_user_file_is_never_overwritten_or_read) ... ok
+test_credential_presence_never_reads_file_env_or_registry_values (test_migration.MigrationTests.test_credential_presence_never_reads_file_env_or_registry_values) ... ok
+test_default_mode_writes_nothing (test_migration.MigrationTests.test_default_mode_writes_nothing) ... ok
+test_dry_run_wins_over_yes (test_migration.MigrationTests.test_dry_run_wins_over_yes) ... ok
+test_dry_run_writes_nothing (test_migration.MigrationTests.test_dry_run_writes_nothing) ... ok
+test_duplicate_identity_fields_are_rejected (test_migration.MigrationTests.test_duplicate_identity_fields_are_rejected) ... ok
+test_empty_key_file_is_presence_not_a_validity_claim (test_migration.MigrationTests.test_empty_key_file_is_presence_not_a_validity_claim) ... ok
+test_equal_and_nested_paths_are_rejected (test_migration.MigrationTests.test_equal_and_nested_paths_are_rejected) ... ok
+test_existing_empty_target_is_not_given_a_skill_identity (test_migration.MigrationTests.test_existing_empty_target_is_not_given_a_skill_identity) ... ok
+test_existing_receipt_is_never_overwritten (test_migration.MigrationTests.test_existing_receipt_is_never_overwritten) ... ok
+test_external_key_store_is_shared_and_unchanged (test_migration.MigrationTests.test_external_key_store_is_shared_and_unchanged) ... ok
+test_filesystem_roots_are_rejected (test_migration.MigrationTests.test_filesystem_roots_are_rejected) ... ok
+test_forward_slash_paths_are_supported_on_this_host (test_migration.MigrationTests.test_forward_slash_paths_are_supported_on_this_host) ... ok
+test_lexical_traversal_and_unsafe_components_are_rejected (test_migration.MigrationTests.test_lexical_traversal_and_unsafe_components_are_rejected) ... ok
+test_missing_source_or_identity_is_rejected (test_migration.MigrationTests.test_missing_source_or_identity_is_rejected) ... ok
+test_missing_target_is_report_only_and_never_phantom_install (test_migration.MigrationTests.test_missing_target_is_report_only_and_never_phantom_install) ... ok
+test_missing_target_requires_exact_intended_media_basename (test_migration.MigrationTests.test_missing_target_requires_exact_intended_media_basename) ... ok
+test_native_paths_with_spaces_are_supported (test_migration.MigrationTests.test_native_paths_with_spaces_are_supported) ... ok
+test_native_posix_paths (test_migration.MigrationTests.test_native_posix_paths) ... skipped 'Requires a native POSIX host; forward slashes on Windows are separate'
+test_native_windows_backslash_paths (test_migration.MigrationTests.test_native_windows_backslash_paths) ... ok
+test_process_environment_detection_uses_names_only (test_migration.MigrationTests.test_process_environment_detection_uses_names_only) ... ok
+test_real_windows_junction_is_rejected (test_migration.MigrationTests.test_real_windows_junction_is_rejected) ... ok
+test_report_includes_all_agent_reload_hints_and_original_output_paths (test_migration.MigrationTests.test_report_includes_all_agent_reload_hints_and_original_output_paths) ... ok
+test_source_identity_must_be_legacy (test_migration.MigrationTests.test_source_identity_must_be_legacy) ... ok
+test_subprocess_default_creates_no_bytecode_or_other_files (test_migration.MigrationTests.test_subprocess_default_creates_no_bytecode_or_other_files) ... ok
+test_subprocess_dry_run_creates_no_bytecode_or_other_files (test_migration.MigrationTests.test_subprocess_dry_run_creates_no_bytecode_or_other_files) ... ok
+test_symlink_receipt_is_rejected_and_external_file_preserved (test_migration.MigrationTests.test_symlink_receipt_is_rejected_and_external_file_preserved) ... ok
+test_symlink_skill_identity_is_rejected_before_reading (test_migration.MigrationTests.test_symlink_skill_identity_is_rejected_before_reading) ... ok
+test_symlink_source_is_rejected (test_migration.MigrationTests.test_symlink_source_is_rejected) ... ok
+test_symlink_target_parent_is_rejected (test_migration.MigrationTests.test_symlink_target_parent_is_rejected) ... ok
+test_target_identity_must_be_media (test_migration.MigrationTests.test_target_identity_must_be_media) ... ok
+test_windows_reparse_fallback_without_path_is_junction (test_migration.MigrationTests.test_windows_reparse_fallback_without_path_is_junction) ... ok
+test_yes_creates_only_receipt_and_preserves_all_data (test_migration.MigrationTests.test_yes_creates_only_receipt_and_preserves_all_data) ... ok
+test_package_contains_only_runtime_files_at_archive_root (test_package_skill.PackageSkillTests.test_package_contains_only_runtime_files_at_archive_root) ... ok
+test_apply_and_cli_refuse_legacy_target (test_release_channels.ReleaseChannelTests.test_apply_and_cli_refuse_legacy_target) ... ok
+test_apply_preserves_keys_outputs_and_custom_files (test_release_channels.ReleaseChannelTests.test_apply_preserves_keys_outputs_and_custom_files) ... ok
+test_archive_build_mismatch_preserves_target_and_cleans_stage (test_release_channels.ReleaseChannelTests.test_archive_build_mismatch_preserves_target_and_cleans_stage) ... ok
+test_archive_cannot_mix_two_skill_roots (test_release_channels.ReleaseChannelTests.test_archive_cannot_mix_two_skill_roots) ... ok
+test_archive_paths_duplicates_and_nonregular_entries (test_release_channels.ReleaseChannelTests.test_archive_paths_duplicates_and_nonregular_entries) ... ok
+test_archive_version_and_required_file_compatibility (test_release_channels.ReleaseChannelTests.test_archive_version_and_required_file_compatibility) ... ok
+test_build_metadata_is_preserved_but_does_not_change_precedence (test_release_channels.ReleaseChannelTests.test_build_metadata_is_preserved_but_does_not_change_precedence) ... ok
+test_builder_refuses_wrong_identity_version_or_channel (test_release_channels.ReleaseChannelTests.test_builder_refuses_wrong_identity_version_or_channel) ... ok
+test_digest_correct_wrong_and_missing (test_release_channels.ReleaseChannelTests.test_digest_correct_wrong_and_missing) ... ok
+test_download_url_must_match_exact_repository_tag_and_asset (test_release_channels.ReleaseChannelTests.test_download_url_must_match_exact_repository_tag_and_asset) ... ok
+test_each_redirect_is_checked_before_network (test_release_channels.ReleaseChannelTests.test_each_redirect_is_checked_before_network) ... ok
+test_fixed_channel_and_requested_endpoint (test_release_channels.ReleaseChannelTests.test_fixed_channel_and_requested_endpoint) ... ok
+test_force_install_preserves_hardlinked_user_file (test_release_channels.ReleaseChannelTests.test_force_install_preserves_hardlinked_user_file) ... ok
+test_genuine_media_target_uses_new_channel (test_release_channels.ReleaseChannelTests.test_genuine_media_target_uses_new_channel) ... ok
+test_installer_refuses_wrong_source_and_target_identity (test_release_channels.ReleaseChannelTests.test_installer_refuses_wrong_source_and_target_identity) ... ok
+test_installer_rejects_parent_file_before_any_write (test_release_channels.ReleaseChannelTests.test_installer_rejects_parent_file_before_any_write) ... ok
+test_legacy_and_ambiguous_frontmatter_rejected (test_release_channels.ReleaseChannelTests.test_legacy_and_ambiguous_frontmatter_rejected) ... ok
+test_legacy_overrides_and_versions_are_rejected (test_release_channels.ReleaseChannelTests.test_legacy_overrides_and_versions_are_rejected) ... ok
+test_malformed_build_metadata_is_rejected (test_release_channels.ReleaseChannelTests.test_malformed_build_metadata_is_rejected) ... ok
+test_missing_package_file_has_no_cross_channel_fallback (test_release_channels.ReleaseChannelTests.test_missing_package_file_has_no_cross_channel_fallback) ... ok
+test_mixed_metadata_selects_only_media_asset (test_release_channels.ReleaseChannelTests.test_mixed_metadata_selects_only_media_asset) ... ok
+test_old_asset_does_not_trigger_fallback (test_release_channels.ReleaseChannelTests.test_old_asset_does_not_trigger_fallback) ... ok
+test_only_exact_published_2_0_0_has_optional_migration_files (test_release_channels.ReleaseChannelTests.test_only_exact_published_2_0_0_has_optional_migration_files) ... ok
+test_package_is_reproducible_and_digest_is_verifiable (test_release_channels.ReleaseChannelTests.test_package_is_reproducible_and_digest_is_verifiable) ... ok
+test_parallel_install_preserves_legacy_and_external_keys (test_release_channels.ReleaseChannelTests.test_parallel_install_preserves_legacy_and_external_keys) ... ok
+test_redirect_boundary (test_release_channels.ReleaseChannelTests.test_redirect_boundary) ... ok
+test_release_version_must_match_tag_build_metadata_exactly (test_release_channels.ReleaseChannelTests.test_release_version_must_match_tag_build_metadata_exactly) ... ok
+test_reload_guidance_for_all_clients (test_release_channels.ReleaseChannelTests.test_reload_guidance_for_all_clients) ... ok
+test_required_manifests_and_real_package (test_release_channels.ReleaseChannelTests.test_required_manifests_and_real_package) ... ok
+test_tag_archive_mismatch_cleans_stage (test_release_channels.ReleaseChannelTests.test_tag_archive_mismatch_cleans_stage) ... ok
+test_auto_omits_optional_fields (test_resolution.ResolutionTests.test_auto_omits_optional_fields) ... ok
+test_dimension_headers (test_resolution.ResolutionTests.test_dimension_headers) ... ok
+test_invalid_size_rejected_before_network (test_resolution.ResolutionTests.test_invalid_size_rejected_before_network) ... ok
+test_presets_and_explicit_sizes_reach_payload (test_resolution.ResolutionTests.test_presets_and_explicit_sizes_reach_payload) ... ok
+test_frontmatter_uses_portable_fields_only (test_skill_contract.SkillContractTests.test_frontmatter_uses_portable_fields_only) ... ok
+test_gemini_confirmation_and_parameter_report_are_documented (test_skill_contract.SkillContractTests.test_gemini_confirmation_and_parameter_report_are_documented) ... ok
+test_openai_metadata_is_valid (test_skill_contract.SkillContractTests.test_openai_metadata_is_valid) ... ok
+test_runtime_files_exist (test_skill_contract.SkillContractTests.test_runtime_files_exist) ... ok
+test_unified_channels_and_credentials_are_documented (test_skill_contract.SkillContractTests.test_unified_channels_and_credentials_are_documented) ... ok
+test_auto_fields_are_omitted_and_explicit_values_are_reported (test_unified_protocol.UnifiedProtocolTests.test_auto_fields_are_omitted_and_explicit_values_are_reported) ... ok
+test_channel_defaults_and_gemini_model_gate (test_unified_protocol.UnifiedProtocolTests.test_channel_defaults_and_gemini_model_gate) ... ok
+test_discovery_rejects_disabled_permission_and_empty_models (test_unified_protocol.UnifiedProtocolTests.test_discovery_rejects_disabled_permission_and_empty_models) ... ok
+test_discovery_requires_image_async_model_on_shared_endpoint (test_unified_protocol.UnifiedProtocolTests.test_discovery_requires_image_async_model_on_shared_endpoint) ... ok
+test_each_channel_submits_the_same_async_request_shape (test_unified_protocol.UnifiedProtocolTests.test_each_channel_submits_the_same_async_request_shape) ... ok
+test_request_uses_bearer_without_redirect_forwarding (test_unified_protocol.UnifiedProtocolTests.test_request_uses_bearer_without_redirect_forwarding) ... ok
+test_apply_preserves_unknown_files (test_update.UpdateTests.test_apply_preserves_unknown_files) ... ok
+test_apply_rechecks_version_under_lock (test_update.UpdateTests.test_apply_rechecks_version_under_lock) ... ok
+test_apply_rejects_special_destination_file (test_update.UpdateTests.test_apply_rejects_special_destination_file) ... skipped 'FIFO special files are POSIX-only'
+test_apply_rejects_symlinked_managed_directory (test_update.UpdateTests.test_apply_rejects_symlinked_managed_directory) ... ok
+test_archive_path_traversal_is_rejected_before_writing (test_update.UpdateTests.test_archive_path_traversal_is_rejected_before_writing) ... ok
+test_live_update_lock_is_not_reclaimed (test_update.UpdateTests.test_live_update_lock_is_not_reclaimed) ... ok
+test_release_archive_is_validated_and_extracted (test_update.UpdateTests.test_release_archive_is_validated_and_extracted) ... ok
+test_release_asset_digest_mismatch_is_rejected (test_update.UpdateTests.test_release_asset_digest_mismatch_is_rejected) ... ok
+test_release_metadata_parses_tag_asset_and_digest (test_update.UpdateTests.test_release_metadata_parses_tag_asset_and_digest) ... ok
+test_safe_path_rejects_symlinked_target (test_update.UpdateTests.test_safe_path_rejects_symlinked_target) ... ok
+test_semantic_version_comparison_handles_prerelease (test_update.UpdateTests.test_semantic_version_comparison_handles_prerelease) ... ok
+test_stale_update_lock_is_reclaimed (test_update.UpdateTests.test_stale_update_lock_is_reclaimed) ... ok
+
+======================================================================
+FAIL: test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) (skill='cloudrelay-mediagen', client='codex')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\code\cloudrelay-mediagen-skill\tests\test_legacy_compat.py", line 450, in test_both_installers_report_each_agent_reload_hint
+    self.assertIn(hint, output.getvalue())
+AssertionError: 'Restart Codex or start a new task.' not found in 'Installed codex: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.agents\\skills\\cloudrelay-mediagen\n  Skills reload automatically; restart Codex if the skill is missing.\nInstalled claude-code: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.claude\\skills\\cloudrelay-mediagen\n  Start a new Claude Code session.\nInstalled gemini-cli: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.gemini\\skills\\cloudrelay-mediagen\n  Run /skills reload in Gemini CLI, then /skills list.\nInstalled openclaw: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\skills\\cloudrelay-mediagen\n  Wait for the skill watcher and the next Agent turn; restart the Gateway if watching is disabled.\nInstalled cursor: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.cursor\\skills\\cloudrelay-mediagen\n  Restart Cursor, then confirm the skill is listed.\n'
+
+======================================================================
+FAIL: test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) (skill='cloudrelay-mediagen', client='openclaw')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\code\cloudrelay-mediagen-skill\tests\test_legacy_compat.py", line 450, in test_both_installers_report_each_agent_reload_hint
+    self.assertIn(hint, output.getvalue())
+AssertionError: 'Start a new OpenClaw session or wait for its skill watcher to reload.' not found in 'Installed codex: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.agents\\skills\\cloudrelay-mediagen\n  Skills reload automatically; restart Codex if the skill is missing.\nInstalled claude-code: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.claude\\skills\\cloudrelay-mediagen\n  Start a new Claude Code session.\nInstalled gemini-cli: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.gemini\\skills\\cloudrelay-mediagen\n  Run /skills reload in Gemini CLI, then /skills list.\nInstalled openclaw: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\skills\\cloudrelay-mediagen\n  Wait for the skill watcher and the next Agent turn; restart the Gateway if watching is disabled.\nInstalled cursor: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.cursor\\skills\\cloudrelay-mediagen\n  Restart Cursor, then confirm the skill is listed.\n'
+
+======================================================================
+FAIL: test_both_installers_report_each_agent_reload_hint (test_legacy_compat.LegacyCompatibilityTests.test_both_installers_report_each_agent_reload_hint) (skill='cloudrelay-mediagen', client='cursor')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "E:\code\cloudrelay-mediagen-skill\tests\test_legacy_compat.py", line 450, in test_both_installers_report_each_agent_reload_hint
+    self.assertIn(hint, output.getvalue())
+AssertionError: 'Start a new Cursor Agent chat.' not found in 'Installed codex: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.agents\\skills\\cloudrelay-mediagen\n  Skills reload automatically; restart Codex if the skill is missing.\nInstalled claude-code: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.claude\\skills\\cloudrelay-mediagen\n  Start a new Claude Code session.\nInstalled gemini-cli: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.gemini\\skills\\cloudrelay-mediagen\n  Run /skills reload in Gemini CLI, then /skills list.\nInstalled openclaw: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\skills\\cloudrelay-mediagen\n  Wait for the skill watcher and the next Agent turn; restart the Gateway if watching is disabled.\nInstalled cursor: C:\\Users\\Administrator\\AppData\\Local\\Temp\\legacy-compat-test-zyylwh5s\\shared project with spaces\\.cursor\\skills\\cloudrelay-mediagen\n  Restart Cursor, then confirm the skill is listed.\n'
+
+----------------------------------------------------------------------
+Ran 170 tests in 11.299s
+
+FAILED (failures=3, skipped=3)

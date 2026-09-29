@@ -1,0 +1,115 @@
+{
+  "checked_at": "2026-09-29T03:38:20.021719+00:00",
+  "repository": "CloudRelay-Code/cloudrelay-mediagen-skill",
+  "releases": [
+    {
+      "tag_name": "v2.0.0",
+      "name": "CloudRelay Mediagen Skill v2.0.0",
+      "html_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v2.0.0",
+      "published_at": "2026-09-29T02:17:33Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "cloudrelay-mediagen.skill",
+          "browser_download_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v2.0.0/cloudrelay-mediagen.skill",
+          "digest": "sha256:ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2",
+          "size": 36259,
+          "state": "uploaded"
+        }
+      ],
+      "verification": [
+        {
+          "asset": "cloudrelay-mediagen.skill",
+          "computed_digest": "sha256:ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2",
+          "digest_verified": true,
+          "archive_identity": "cloudrelay-mediagen",
+          "archive_version": "2.0.0",
+          "tag_matches_version": true,
+          "download_final_host": "release-assets.githubusercontent.com",
+          "members": [
+            "SKILL.md",
+            "VERSION",
+            "agents/openai.yaml",
+            "scripts/configure_api_key.py",
+            "scripts/generate_image.py",
+            "scripts/generate_video.py",
+            "references/images.md",
+            "references/videos.md",
+            "scripts/_update_common.py",
+            "scripts/check_update.py",
+            "scripts/update.py",
+            "scripts/update.ps1",
+            "scripts/update.sh"
+          ]
+        }
+      ]
+    },
+    {
+      "tag_name": "v1.5.0",
+      "name": "CloudRelay ImageGen Skill v1.5.0",
+      "html_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v1.5.0",
+      "published_at": "2026-09-24T03:10:16Z",
+      "draft": false,
+      "prerelease": false,
+      "assets": [
+        {
+          "name": "cloudrelay-imagegen.skill",
+          "browser_download_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v1.5.0/cloudrelay-imagegen.skill",
+          "digest": "sha256:b791cfe73dd4e7d478e7504d489cdaa595fe1c092d8af4956d42ba90ef5f7d32",
+          "size": 27649,
+          "state": "uploaded"
+        }
+      ],
+      "verification": [
+        {
+          "asset": "cloudrelay-imagegen.skill",
+          "computed_digest": "sha256:b791cfe73dd4e7d478e7504d489cdaa595fe1c092d8af4956d42ba90ef5f7d32",
+          "digest_verified": true,
+          "archive_identity": "cloudrelay-imagegen",
+          "archive_version": "1.5.0",
+          "tag_matches_version": true,
+          "download_final_host": "release-assets.githubusercontent.com",
+          "members": [
+            "SKILL.md",
+            "VERSION",
+            "agents/openai.yaml",
+            "scripts/configure_api_key.py",
+            "scripts/generate_image.py",
+            "scripts/_update_common.py",
+            "scripts/check_update.py",
+            "scripts/update.py",
+            "scripts/update.ps1",
+            "scripts/update.sh"
+          ]
+        }
+      ]
+    }
+  ],
+  "legacy_latest": {
+    "tag_name": "v2.0.0",
+    "html_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v2.0.0",
+    "assets": [
+      {
+        "name": "cloudrelay-mediagen.skill",
+        "browser_download_url": "https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v2.0.0/cloudrelay-mediagen.skill",
+        "digest": "sha256:ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2"
+      }
+    ]
+  },
+  "legacy_actual_latest_probe": {
+    "version": "2.0.0",
+    "has_legacy_asset": false
+  },
+  "legacy_actual_v1_5_url_probe": {
+    "rejected": true,
+    "reason": "Release asset URL is outside the trusted GitHub repository."
+  },
+  "account": "CloudRelay-Code",
+  "legacy_repository_resolution": {
+    "full_name": "CloudRelay-Code/cloudrelay-mediagen-skill",
+    "id": 1319256142,
+    "owner_type": "User"
+  },
+  "conclusion": "Old name is a redirect, not an independent release channel. Owner/name checks support requesting a dual-track repository; successful restoration is not established without authorized creation. Currently only explicit manual identity migration is supported."
+}

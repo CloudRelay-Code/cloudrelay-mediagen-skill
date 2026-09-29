@@ -1,0 +1,21 @@
+Verifier source and isolated worker compiled. --help exited 0. No online requests made.
+usage: verify_release_channels.py [-h] --output OUTPUT
+                                  [--legacy-tag LEGACY_TAG]
+                                  [--media-tag MEDIA_TAG] [--timeout TIMEOUT]
+
+Verify published, independent ImageGen/MediaGen channels using public GETs.
+
+All installation exercises run in a disposable directory. Historical v1.5.0
+fixture bytes stay unchanged. Media uses the downloaded, tested candidate
+runtime with only its temporary VERSION marker set to 2.0.0; this is not a
+claim to exercise the original v2.0.0 updater. No generation API is called.
+
+options:
+  -h, --help            show this help message and exit
+  --output OUTPUT       Explicit JSON evidence path; written atomically after
+                        the attempt.
+  --legacy-tag LEGACY_TAG
+                        Exact expected stable legacy latest (default: v1.5.1).
+  --media-tag MEDIA_TAG
+                        Exact expected stable media latest (default: v2.0.1).
+  --timeout TIMEOUT     Timeout per public GET in seconds (default: 30).

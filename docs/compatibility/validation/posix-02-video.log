@@ -1,0 +1,24 @@
+Command: /usr/bin/python3 -B scripts/test_video.py -v
+CWD: /tmp/cloudrelay-posix-validation-febwsa0p/source
+Started: 2026-09-29T06:35:14.005380+00:00
+Exit code: 0
+
+test_bad_downloads_do_not_produce_outputs (__main__.VideoTests) ... ok
+test_download_credential_origin_boundary (__main__.VideoTests) ... ok
+test_edit_and_extension_payloads (__main__.VideoTests) ... ok
+test_end_to_end_each_action_submits_once_and_reports (__main__.VideoTests) ... ok
+test_failed_submission_is_not_retried (__main__.VideoTests) ... ok
+test_generation_defaults_and_explicit_parameters (__main__.VideoTests) ... ok
+test_invalid_inputs_stop_before_credentials_or_network (__main__.VideoTests) ... ok
+test_legacy_target_does_not_fetch_or_apply (__main__.VideoTests) ... ok
+test_local_first_frame_is_encoded (__main__.VideoTests) ... ok
+test_model_discovery_and_image_only_restrictions (__main__.VideoTests) ... ok
+test_poll_pending_transient_and_done (__main__.VideoTests) ... ok
+test_poll_terminal_http_errors_stop_immediately (__main__.VideoTests) ... ok
+test_poll_terminal_states_and_timeout (__main__.VideoTests) ... ok
+test_resume_only_polls_and_downloads (__main__.VideoTests) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.016s
+
+OK

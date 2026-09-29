@@ -1,0 +1,45 @@
+Command: /usr/bin/python3 -B -m py_compile scripts/configure_api_key.py scripts/generate_image.py scripts/generate_video.py scripts/migrate_from_imagegen.py scripts/_update_common.py scripts/check_update.py scripts/update.py install.py tools/package_skill.py tools/package_legacy_skill.py tools/sync_adapters.py tools/verify_release_channels.py legacy/cloudrelay-imagegen/scripts/configure_api_key.py legacy/cloudrelay-imagegen/scripts/generate_image.py legacy/cloudrelay-imagegen/scripts/_update_common.py legacy/cloudrelay-imagegen/scripts/check_update.py legacy/cloudrelay-imagegen/scripts/update.py
+CWD: /tmp/cloudrelay-posix-validation-febwsa0p/source
+Started: 2026-09-29T06:35:14.071214+00:00
+Exit code: 0
+
+
+Launcher help command: sh scripts/update.sh --help
+Exit code: 0
+usage: update.py [-h] [--target-dir TARGET_DIR] [--timeout TIMEOUT] [--apply]
+                 [--yes] [--auto] [--force]
+
+Check and safely update an installed CloudRelay MediaGen skill.
+
+options:
+  -h, --help            show this help message and exit
+  --target-dir TARGET_DIR
+                        Installed skill directory (defaults to this skill).
+  --timeout TIMEOUT
+  --apply               Write the verified release. Without this flag the
+                        command is read-only.
+  --yes                 Skip the interactive confirmation (for trusted
+                        automation only).
+  --auto                Apply an available verified update without prompting.
+  --force               Reinstall the same release when --apply is also
+                        provided.
+
+Launcher help command: sh legacy/cloudrelay-imagegen/scripts/update.sh --help
+Exit code: 0
+usage: update.py [-h] [--target-dir TARGET_DIR] [--timeout TIMEOUT] [--apply]
+                 [--yes] [--auto] [--force]
+
+Check and safely update an installed CloudRelay ImageGen skill.
+
+options:
+  -h, --help            show this help message and exit
+  --target-dir TARGET_DIR
+                        Installed skill directory (defaults to this skill).
+  --timeout TIMEOUT
+  --apply               Write the verified release. Without this flag the
+                        command is read-only.
+  --yes                 Skip the interactive confirmation (for trusted
+                        automation only).
+  --auto                Apply an available verified update without prompting.
+  --force               Reinstall the same release when --apply is also
+                        provided.

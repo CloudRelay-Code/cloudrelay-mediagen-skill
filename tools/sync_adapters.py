@@ -6,6 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 import shutil
 import sys
+import tempfile
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parent.parent
@@ -23,6 +24,8 @@ MANAGED_FILES = (
     Path("scripts/configure_api_key.py"),
     Path("scripts/generate_image.py"),
     Path("scripts/generate_video.py"),
+    Path("scripts/migrate_from_imagegen.py"),
+    Path("references/migration.md"),
     Path("references/images.md"),
     Path("references/videos.md"),
     Path("scripts/_update_common.py"),
@@ -54,7 +57,15 @@ def sync_adapter(adapter_root: Path) -> None:
         if target.exists() and not target.is_file():
             raise RuntimeError(f"Refusing to replace a non-regular adapter file: {target}")
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source, target)
+        with tempfile.NamedTemporaryFile(prefix=".cloudrelay-adapter-", dir=target.parent, delete=False) as stream:
+            temporary = Path(stream.name)
+        try:
+            shutil.copy2(source, temporary)
+            ensure_safe_path(target)
+            temporary.replace(target)
+        finally:
+            if temporary.exists():
+                temporary.unlink()
 
 
 def main() -> int:

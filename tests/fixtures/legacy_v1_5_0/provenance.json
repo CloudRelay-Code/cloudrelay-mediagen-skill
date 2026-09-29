@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "source_commit": "2f2d6a077dc2acda21fff2896f144a075d9a3f72",
+  "source_tag": "v1.5.0",
+  "historical_repository": "CloudRelay-Code/cloudrelay-imagegen-skill",
+  "extracted_from_repository": "CloudRelay-Code/cloudrelay-mediagen-skill",
+  "extraction_method": "git show <source_commit>:<source_path>; raw bytes, no newline normalization or source edits",
+  "files": [
+    {
+      "source_path": "SKILL.md",
+      "fixture_path": "SKILL.md.fixture",
+      "sha256": "096a48ce711944860f399a04d8b1da539458412f129ce525de868ad0b55b13ed",
+      "size_bytes": 12037
+    },
+    {
+      "source_path": "VERSION",
+      "fixture_path": "VERSION.fixture",
+      "sha256": "acb57a7135b2d7d6e665f67f056e21353023b93835f54def1ae523bf76f1bfb3",
+      "size_bytes": 6
+    },
+    {
+      "source_path": "agents/openai.yaml",
+      "fixture_path": "agents/openai.yaml.fixture",
+      "sha256": "124e1ff111d6520fe59f295eee77765e7e23de16c0f3b7f5053173f6e57ebb9a",
+      "size_bytes": 302
+    },
+    {
+      "source_path": "scripts/configure_api_key.py",
+      "fixture_path": "scripts/configure_api_key.py.fixture",
+      "sha256": "d5f64556ab9708e77f64d0855f22078b71706cf3ea6ca089a0d6b1fff97e2b9f",
+      "size_bytes": 7897
+    },
+    {
+      "source_path": "scripts/generate_image.py",
+      "fixture_path": "scripts/generate_image.py.fixture",
+      "sha256": "cc5a6db22e99c8e78657284921d98b1daeafd7055df1661e34344a15e73307fe",
+      "size_bytes": 31432
+    },
+    {
+      "source_path": "scripts/_update_common.py",
+      "fixture_path": "scripts/_update_common.py.fixture",
+      "sha256": "68ecc643b7e144f6b4b45f2dc46997004c5cf2a04d25b9afdcf4ac7324ddcd89",
+      "size_bytes": 24550
+    },
+    {
+      "source_path": "scripts/check_update.py",
+      "fixture_path": "scripts/check_update.py.fixture",
+      "sha256": "2ad58bf76c93aeb3bd328c1013df354c3b9f14bb41390109c3f8207ffd9b5e99",
+      "size_bytes": 2846
+    },
+    {
+      "source_path": "scripts/update.py",
+      "fixture_path": "scripts/update.py.fixture",
+      "sha256": "cf4cc2663e8e405ff94f35a21babef1a488e3c6b7e45416cb2e4d6b10aef03cd",
+      "size_bytes": 4584
+    },
+    {
+      "source_path": "scripts/update.ps1",
+      "fixture_path": "scripts/update.ps1.fixture",
+      "sha256": "d780018ffa98fa99be6b4c329a650534f8d8fe9efaa5cdebb2047732ec9b5534",
+      "size_bytes": 162
+    },
+    {
+      "source_path": "scripts/update.sh",
+      "fixture_path": "scripts/update.sh.fixture",
+      "sha256": "85f365c528d4291ab7abb795b1e1263fd75f049b4680ea591e489494d4ef699a",
+      "size_bytes": 124
+    },
+    {
+      "source_path": "install.py",
+      "fixture_path": "install.py.fixture",
+      "sha256": "a3c53ee48827eac58f582724bce3706eb14117fa2fa5b0fafebc1c4d2f295142",
+      "size_bytes": 6571
+    },
+    {
+      "source_path": "tools/package_skill.py",
+      "fixture_path": "tools/package_skill.py.fixture",
+      "sha256": "389867180ca4bfe1eea4e530b30648049a2fc775fc86d6de7b3ae43cac001378",
+      "size_bytes": 1628
+    }
+  ],
+  "source_tag_object": "1a3d213f841cdb93131dfa42f5803473554f9f39"
+}

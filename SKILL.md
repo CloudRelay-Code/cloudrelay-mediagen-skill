@@ -25,4 +25,6 @@ Verify outputs and inspect images or preview videos before claiming visual succe
 
 ## Local version and updates
 
-`VERSION` is the installed local version. This local media variant has no compatible release source configured. The retained legacy updater targets image-only releases and is guarded from replacing this variant. Do not run it automatically or remove the compatibility guard. Update this variant in place when requested, preserving video support, keys and outputs. Reload the skill list or start a new chat after changing the skill identity.
+VERSION is the installed version. The updater accepts only the fixed MediaGen repository, media asset and exact media identity, with SHA-256, archive/tag version and path checks. Video scripts and references are managed together with image files. Do not use the historical ImageGen updater on a media directory. Update only when requested, using scripts/update.py --apply; --auto is for separately authorized unattended jobs. The old blanket local-variant guard is replaced by strict channel and target-identity validation, not by a fallback to image releases.
+
+For an old ImageGen installation, read [references/migration.md](references/migration.md). Install the new identity separately, then optionally run scripts/migrate_from_imagegen.py with explicit source/target paths. The default is a read-only report; --yes records only migration metadata in an already installed media directory. Never copy keys, move outputs, or rewrite the old identity. Reload or restart the Agent after installing the new skill.

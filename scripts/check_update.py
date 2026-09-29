@@ -11,18 +11,22 @@ import sys
 try:
     from _update_common import (
         ASSET_NAME,
+        REPOSITORY,
         UpdateError,
         compare_versions,
         fetch_latest_release,
         local_version,
+        validate_skill_identity,
     )
 except ImportError:
     from ._update_common import (
         ASSET_NAME,
+        REPOSITORY,
         UpdateError,
         compare_versions,
         fetch_latest_release,
         local_version,
+        validate_skill_identity,
     )
 
 
@@ -46,12 +50,9 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-    target = args.target_dir.expanduser().resolve()
-    if (target / "SKILL.md").is_file() and "name: cloudrelay-mediagen" in (target / "SKILL.md").read_text(encoding="utf-8"):
-        result = {"status": "local-variant", "message": "Legacy image-only release source is incompatible; media release source is not configured."}
-        print(json.dumps(result) if args.as_json else result["message"])
-        return 0
+    target = args.target_dir.expanduser().absolute()
     try:
+        validate_skill_identity(target)
         current = local_version(target)
         latest = fetch_latest_release(timeout=args.timeout)
         if current is None:
@@ -66,7 +67,7 @@ def main(argv: list[str] | None = None) -> int:
                 else "up-to-date"
             )
         result = {
-            "repository": "CloudRelay-Code/cloudrelay-mediagen-skill",
+            "repository": REPOSITORY,
             "current": current.normalized if current else None,
             "latest": latest.version.normalized,
             "tag": latest.tag_name,
@@ -83,7 +84,7 @@ def main(argv: list[str] | None = None) -> int:
                 f"latest={result['latest']} status={status}"
             )
         return 0
-    except (UpdateError, ValueError) as error:
+    except (UpdateError, OSError, ValueError) as error:
         if args.quiet:
             return 0
         print(f"Update check failed: {error}", file=sys.stderr)

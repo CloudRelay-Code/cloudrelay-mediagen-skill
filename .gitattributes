@@ -1,0 +1,9 @@
+# Preserve tested package inputs, adapter mirrors, and immutable historical fixtures.
+/SKILL.md -text
+/VERSION -text
+/agents/** -text
+/scripts/** -text
+/references/** -text
+/adapters/*/skills/** -text
+/legacy/cloudrelay-imagegen/** -text
+/tests/fixtures/legacy_v1_5_0/** -text

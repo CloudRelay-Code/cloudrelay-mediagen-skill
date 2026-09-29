@@ -45,7 +45,7 @@ class UpdateTests(unittest.TestCase):
             ],
         }
         with mock.patch(
-            "scripts._update_common.urllib.request.urlopen",
+            "scripts._update_common._urlopen",
             return_value=self._Response(json.dumps(payload).encode("utf-8")),
         ):
             release = update_common.fetch_latest_release(timeout=1)
@@ -61,7 +61,7 @@ class UpdateTests(unittest.TestCase):
             published_at=None,
         )
         with mock.patch(
-            "scripts._update_common.urllib.request.urlopen",
+            "scripts._update_common._urlopen",
             return_value=self._Response(b"not-the-release"),
         ):
             with self.assertRaises(update_common.UpdateError):

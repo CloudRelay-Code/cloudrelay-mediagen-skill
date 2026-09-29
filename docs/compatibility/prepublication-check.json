@@ -1,0 +1,226 @@
+{
+  "checked_at": "2026-09-29T04:40:15.402589+00:00",
+  "external_mutations_performed": false,
+  "commands": [
+    {
+      "command": [
+        "git",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "7bc30dc013325ce252897c2985ecf295b6e9509b\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "remote",
+        "-v"
+      ],
+      "exit_code": 0,
+      "stdout": "origin\thttps://github.com/CloudRelay-Code/cloudrelay-mediagen-skill.git (fetch)\norigin\thttps://github.com/CloudRelay-Code/cloudrelay-mediagen-skill.git (push)\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "git",
+        "tag",
+        "--list",
+        "--sort=-version:refname"
+      ],
+      "exit_code": 0,
+      "stdout": "v1.5.0\nv1.4.1\nv1.4.0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "release",
+        "view",
+        "v2.0.0",
+        "--repo",
+        "CloudRelay-Code/cloudrelay-mediagen-skill",
+        "--json",
+        "tagName,name,assets,url,publishedAt"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"assets\":[{\"apiUrl\":\"https://api.github.com/repos/CloudRelay-Code/cloudrelay-mediagen-skill/releases/assets/597000713\",\"contentType\":\"application/octet-stream\",\"createdAt\":\"2026-09-29T02:17:32Z\",\"digest\":\"sha256:ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2\",\"downloadCount\":2,\"id\":\"RA_kwDOTqJATs4jlYIJ\",\"label\":\"\",\"name\":\"cloudrelay-mediagen.skill\",\"size\":36259,\"state\":\"uploaded\",\"updatedAt\":\"2026-09-29T02:17:32Z\",\"url\":\"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v2.0.0/cloudrelay-mediagen.skill\"}],\"name\":\"CloudRelay Mediagen Skill v2.0.0\",\"publishedAt\":\"2026-09-29T02:17:33Z\",\"tagName\":\"v2.0.0\",\"url\":\"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v2.0.0\"}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "release",
+        "list",
+        "--repo",
+        "CloudRelay-Code/cloudrelay-mediagen-skill",
+        "--limit",
+        "10"
+      ],
+      "exit_code": 0,
+      "stdout": "CloudRelay Mediagen Skill v2.0.0\tLatest\tv2.0.0\t2026-09-29T02:17:33Z\nCloudRelay ImageGen Skill v1.5.0\t\tv1.5.0\t2026-09-24T03:10:16Z\nv1.4.1\t\tv1.4.1\t2026-09-09T03:28:37Z\nCloudRelay ImageGen Skill v1.4.0\t\tv1.4.0\t2026-08-31T16:32:29Z\nCloudRelay ImageGen Skill v1.2.0\t\tv1.2.0\t2026-08-11T11:50:37Z\nCloudRelay ImageGen Skill v1.1.1\t\tv1.1.1\t2026-08-01T12:47:33Z\nCloudRelay ImageGen Skill v1.1.0\t\tv1.1.0\t2026-08-01T12:33:29Z\nCloudRelay ImageGen Skill v1.0.0\t\tv1.0.0\t2026-08-01T11:58:45Z\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "release",
+        "list",
+        "--repo",
+        "CloudRelay-Code/cloudrelay-imagegen-skill",
+        "--limit",
+        "10"
+      ],
+      "exit_code": 0,
+      "stdout": "CloudRelay Mediagen Skill v2.0.0\tLatest\tv2.0.0\t2026-09-29T02:17:33Z\nCloudRelay ImageGen Skill v1.5.0\t\tv1.5.0\t2026-09-24T03:10:16Z\nv1.4.1\t\tv1.4.1\t2026-09-09T03:28:37Z\nCloudRelay ImageGen Skill v1.4.0\t\tv1.4.0\t2026-08-31T16:32:29Z\nCloudRelay ImageGen Skill v1.2.0\t\tv1.2.0\t2026-08-11T11:50:37Z\nCloudRelay ImageGen Skill v1.1.1\t\tv1.1.1\t2026-08-01T12:47:33Z\nCloudRelay ImageGen Skill v1.1.0\t\tv1.1.0\t2026-08-01T12:33:29Z\nCloudRelay ImageGen Skill v1.0.0\t\tv1.0.0\t2026-08-01T11:58:45Z\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-imagegen-skill",
+        "--jq",
+        "{full_name: .full_name, id: .id}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"full_name\":\"CloudRelay-Code/cloudrelay-mediagen-skill\",\"id\":1319256142}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "api",
+        "repos/CloudRelay-Code/cloudrelay-imagegen-skill/releases/latest",
+        "--jq",
+        "{tag_name: .tag_name, html_url: .html_url, assets: [.assets[] | {name, browser_download_url, digest}]}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"assets\":[{\"browser_download_url\":\"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v2.0.0/cloudrelay-mediagen.skill\",\"digest\":\"sha256:ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2\",\"name\":\"cloudrelay-mediagen.skill\"}],\"html_url\":\"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v2.0.0\",\"tag_name\":\"v2.0.0\"}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "gh",
+        "release",
+        "view",
+        "v1.5.0",
+        "--repo",
+        "CloudRelay-Code/cloudrelay-mediagen-skill",
+        "--json",
+        "tagName,assets,url"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"assets\":[{\"apiUrl\":\"https://api.github.com/repos/CloudRelay-Code/cloudrelay-mediagen-skill/releases/assets/585044835\",\"contentType\":\"application/octet-stream\",\"createdAt\":\"2026-09-24T03:10:15Z\",\"digest\":\"sha256:b791cfe73dd4e7d478e7504d489cdaa595fe1c092d8af4956d42ba90ef5f7d32\",\"downloadCount\":3,\"id\":\"RA_kwDOTqJATs4i3xNj\",\"label\":\"\",\"name\":\"cloudrelay-imagegen.skill\",\"size\":27649,\"state\":\"uploaded\",\"updatedAt\":\"2026-09-24T03:10:15Z\",\"url\":\"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/download/v1.5.0/cloudrelay-imagegen.skill\"}],\"tagName\":\"v1.5.0\",\"url\":\"https://github.com/CloudRelay-Code/cloudrelay-mediagen-skill/releases/tag/v1.5.0\"}\n",
+      "stderr": ""
+    }
+  ],
+  "git_head": "7bc30dc013325ce252897c2985ecf295b6e9509b",
+  "real_media_updater_verification": {
+    "tag": "v2.0.0",
+    "digest": "ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2",
+    "computed_sha256": "ff81c762460d99843bc9583a3b95931f786d1524ea2d84bca9fa3d6268111ff2",
+    "archive_version": "2.0.0",
+    "identity": "cloudrelay-mediagen",
+    "video_script": true,
+    "video_reference": true,
+    "verified": true
+  },
+  "local_packages": [
+    {
+      "path": "dist/cloudrelay-mediagen.skill",
+      "identity": "cloudrelay-mediagen",
+      "version": "2.0.1",
+      "files": 15,
+      "bytes": 45146,
+      "sha256": "a059495dbbe7467a8ed50d8b08aa3cb1da7615b0a00b16976a6628fe378901fb",
+      "reproducible": true,
+      "real_api_digest_available": false,
+      "manifest": [
+        "SKILL.md",
+        "VERSION",
+        "agents/openai.yaml",
+        "scripts/configure_api_key.py",
+        "scripts/generate_image.py",
+        "scripts/generate_video.py",
+        "scripts/migrate_from_imagegen.py",
+        "references/migration.md",
+        "references/images.md",
+        "references/videos.md",
+        "scripts/_update_common.py",
+        "scripts/check_update.py",
+        "scripts/update.py",
+        "scripts/update.ps1",
+        "scripts/update.sh"
+      ],
+      "published": false
+    },
+    {
+      "path": "dist/cloudrelay-imagegen.skill",
+      "identity": "cloudrelay-imagegen",
+      "version": "1.5.1",
+      "files": 10,
+      "bytes": 28933,
+      "sha256": "32daf302fa70ce86b42e3444f23603df034a0f320c7a298bd6fb5d7d89507385",
+      "reproducible": true,
+      "real_api_digest_available": false,
+      "manifest": [
+        "SKILL.md",
+        "VERSION",
+        "agents/openai.yaml",
+        "scripts/configure_api_key.py",
+        "scripts/generate_image.py",
+        "scripts/_update_common.py",
+        "scripts/check_update.py",
+        "scripts/update.py",
+        "scripts/update.ps1",
+        "scripts/update.sh"
+      ],
+      "published": false
+    }
+  ],
+  "legacy_repository_restored": false,
+  "legacy_candidate_only_offline_metadata_verified": true,
+  "remote_latest_same_redirected_repository": true,
+  "publication_authorization_received": false,
+  "final_local_evidence_at": "2026-09-29T04:47:41.179555+00:00",
+  "final_validation": {
+    "windows_main": [
+      170,
+      167,
+      3,
+      0,
+      0
+    ],
+    "linux_main": [
+      170,
+      167,
+      3,
+      0,
+      0
+    ],
+    "video": [
+      14,
+      14,
+      0,
+      0,
+      0
+    ],
+    "cross_platform_unique_all_passed": 184,
+    "historical_fixture_files_verified_against_git": 12,
+    "cross_platform_packages_equal": true
+  },
+  "final_git_status_file": "docs/compatibility/git-status-final.txt",
+  "final_git_status_entries": 103,
+  "subsequent_authorized_repository_creation": {
+    "created_at": "2026-09-29T06:04:30Z",
+    "repository": "CloudRelay-Code/cloudrelay-imagegen-skill",
+    "repository_id": 1394481012,
+    "evidence": "docs/compatibility/repository-creation-2026-09-29.json",
+    "scope": "public repository creation only",
+    "code_or_tags_pushed": false,
+    "release_published": false,
+    "legacy_latest_status": 404
+  }
+}

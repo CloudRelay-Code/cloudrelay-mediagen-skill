@@ -24,6 +24,7 @@ class InstallTests(unittest.TestCase):
             path = self.source / relative_path
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(str(relative_path), encoding="utf-8")
+        (self.source / "SKILL.md").write_text("---\nname: cloudrelay-mediagen\ndescription: Test media skill\n---\n", encoding="utf-8")
         self.home = self.root / "home"
         self.project = self.root / "project"
 

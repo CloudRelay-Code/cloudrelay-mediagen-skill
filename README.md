@@ -1,5 +1,9 @@
 # CloudRelay MediaGen
 
+旧版迁移和数据保留请见 [迁移指南](references/migration.md)，实际发布验收见 [兼容性报告](docs/compatibility/report.md)。旧图片 Skill 沿独立 1.5.x 通道更新；切换媒体功能需独立安装新身份。
+
+媒体 **2.0.1** 与图片旧版 **1.5.1** 使用不同仓库、asset、身份和 latest。旧版源码位于 [legacy/cloudrelay-imagegen](legacy/cloudrelay-imagegen)，由 tools/package_legacy_skill.py 固定生成 cloudrelay-imagegen.skill；媒体包由 tools/package_skill.py 生成 cloudrelay-mediagen.skill。两种安装可共存，更新与迁移保留密钥、生成目录和自定义文件。发布说明见 [2.0.1](docs/compatibility/release-notes-2.0.1.md) 与 [1.5.1](docs/compatibility/release-notes-1.5.1.md)。
+
 This repository is versioned through the root `VERSION` file. The installed skill can check for a newer release without changing files, and it can apply a verified release when explicitly authorized.
 
 From 1.5.0, `--size WIDTHxHEIGHT` accepts explicit pixel dimensions, including
@@ -28,7 +32,7 @@ For a trusted scheduled job that has been explicitly configured for unattended u
 python scripts/update.py --auto
 ```
 
-To opt in to applying verified updates automatically when the skill activates, set `CLOUDRELAY_MEDIAGEN_AUTO_UPDATE=1` in the host environment. Without that explicit opt-in, activation performs a read-only check and reports an available update instead of changing files.
+Updates are explicit. Use --apply after review, or --auto only in a separately authorized scheduled job. Merely loading the skill does not enable unattended changes.
 
 The updater only trusts the GitHub Releases endpoint for this repository, requires the release asset SHA-256 digest, validates the downloaded archive before replacement, and updates only managed runtime files. The digest verifies transfer/content integrity against the GitHub API response; it is not a publisher signature, so GitHub and repository-release access remain the trust root. It never reads or writes the CloudRelay API key, generated images, or unrelated files. Network failures during the normal skill activation check are non-fatal.
 
@@ -257,7 +261,7 @@ python scripts/generate_image.py --help
 
 ```bash
 python -m unittest discover -s tests -v
-python -m py_compile scripts/configure_api_key.py scripts/generate_image.py install.py
+python -m py_compile scripts/configure_api_key.py scripts/generate_image.py scripts/generate_video.py scripts/migrate_from_imagegen.py scripts/_update_common.py scripts/check_update.py scripts/update.py install.py
 python tools/package_skill.py
 ```
 

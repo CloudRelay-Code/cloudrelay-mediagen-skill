@@ -1,0 +1,16 @@
+{
+  "cloudrelay-mediagen": {
+    "index_runtime_matches": true,
+    "raw_equals_git_filtered_hash": true,
+    "rebuilt_index_package_sha256": "df076d9e7cec01028700b962066009a055cf76ff30f7da6a0e8d1244d8d06691"
+  },
+  "cloudrelay-imagegen": {
+    "index_runtime_matches": true,
+    "raw_equals_git_filtered_hash": true,
+    "rebuilt_index_package_sha256": "32daf302fa70ce86b42e3444f23603df034a0f320c7a298bd6fb5d7d89507385"
+  },
+  "historical_fixture12_index_bytes_unchanged": true,
+  "adapter_index_bytes_match": true,
+  "standalone_source14_index_bytes_match": true,
+  "diff_whitespace_check": "Passed with cr-at-eol; exact raw validation *.log files excluded to preserve historical failure output."
+}
