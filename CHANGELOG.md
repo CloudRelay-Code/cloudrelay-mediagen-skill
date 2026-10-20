@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.1.0 — 2026-10-21 (reference-image generation)
+
+- Add repeatable `--image PATH` for local PNG, JPEG and WebP references, preserving prompt order and original bytes.
+- Submit reference images as multipart `image[]` parts to `/v1/images/edits/async`; text-only requests retain their JSON generation endpoint.
+- Validate and read references before credential lookup or network access, with MIME detection from file contents and support for Chinese filenames and spaces.
+- Report ordered absolute `input_images`, `reference_image_count` and the submission endpoint while preserving the legacy `input_image` field.
+- Preserve channel/model rules, asynchronous polling and size/quality/count options; rejected edits stop without retrying or dropping references.
+- Synchronize Codex/Claude adapters and add offline upload, validation, polling, output and error-handling tests. Live model edit support and visual fidelity have not been verified.
+
 ## 2.0.1 — 2026-09-29 (legacy compatibility)
 
 - Preserve package, adapter and frozen-fixture bytes across Git platforms; use LF for the media POSIX update wrapper.

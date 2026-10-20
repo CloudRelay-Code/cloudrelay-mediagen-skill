@@ -2,7 +2,7 @@
 
 旧版迁移和数据保留请见 [迁移指南](references/migration.md)，实际发布验收见 [兼容性报告](docs/compatibility/report.md)。旧图片 Skill 沿独立 1.5.x 通道更新；切换媒体功能需独立安装新身份。
 
-媒体 **2.0.1** 与图片旧版 **1.5.1** 使用不同仓库、asset、身份和 latest。旧版源码位于 [legacy/cloudrelay-imagegen](legacy/cloudrelay-imagegen)，由 tools/package_legacy_skill.py 固定生成 cloudrelay-imagegen.skill；媒体包由 tools/package_skill.py 生成 cloudrelay-mediagen.skill。两种安装可共存，更新与迁移保留密钥、生成目录和自定义文件。发布说明见 [2.0.1](docs/compatibility/release-notes-2.0.1.md) 与 [1.5.1](docs/compatibility/release-notes-1.5.1.md)。
+媒体 **2.1.0** 与图片旧版 **1.5.1** 使用不同仓库、asset、身份和 latest。旧版源码位于 [legacy/cloudrelay-imagegen](legacy/cloudrelay-imagegen)，由 tools/package_legacy_skill.py 固定生成 cloudrelay-imagegen.skill；媒体包由 tools/package_skill.py 生成 cloudrelay-mediagen.skill。两种安装可共存，更新与迁移保留密钥、生成目录和自定义文件。本次更新见 [2.1.0 更新记录](CHANGELOG.md)；历史兼容性发布说明见 [2.0.1](docs/compatibility/release-notes-2.0.1.md) 与 [1.5.1](docs/compatibility/release-notes-1.5.1.md)。
 
 This repository is versioned through the root `VERSION` file. The installed skill can check for a newer release without changing files, and it can apply a verified release when explicitly authorized.
 
@@ -57,10 +57,23 @@ CloudRelay 为此开发了异步生图接口：客户端只需提交一次生成
 - GPT、Gemini、Grok 共用模型发现、异步提交和任务轮询接口
 - 支持 `1024x1024`、`1536x1024`、`1024x1536`、`2048x2048` 和自动尺寸
 - 支持一次生成 1 至 4 张图片
+- 支持用 `--image` 传入单张或多张 PNG、JPEG、WebP 参考图，按顺序上传至异步图生图接口
 - 自动提交异步任务、轮询状态并保存 base64 或 URL 结果
 - 自动识别 PNG、JPEG、GIF 和 WebP，并在结束后报告实际生成参数
 - 三个渠道分别使用独立环境变量和密钥分组，不跨渠道回退
 - 运行脚本只依赖 Python 标准库
+
+## 参考图生图（2.1.0 起）
+
+在仓库根目录运行，使用重复的 `--image` 按提示词中的顺序传入参考图：
+
+```powershell
+python scripts/generate_image.py --provider gpt --prompt "保留第一张参考图的主体，采用第二张参考图的画风" --image "C:/images/主体 参考.png" --image "C:/images/style.jpg" --size 1536x1024 --quality high --count 1 --output-dir "./generated-images"
+```
+
+单张参考图只传一次 `--image`。文件须为本地 PNG、JPEG 或 WebP，支持中文和空格路径；脚本按文件内容识别格式，并在读取密钥或访问网络前校验文件。参考图以 multipart `image[]` 上传到 `/v1/images/edits/async`，不传参考图时仍使用原有文生图接口。
+
+结果包含参考图绝对路径、数量、实际提交接口及实际输出尺寸。渠道、模型选择和密钥规则与文生图相同；具体模型是否支持图生图由服务端决定，拒绝时不会自动重试或丢弃参考图。本次验证为离线协议测试，未验证线上模型支持或生成效果。更多说明见 [图片工作流](references/images.md)。
 
 ## 兼容性
 

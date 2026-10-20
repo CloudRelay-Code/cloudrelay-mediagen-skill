@@ -119,11 +119,14 @@ class ReleaseChannelTests(unittest.TestCase):
     def test_archive_build_mismatch_preserves_target_and_cleans_stage(self):
         target = self.tree()
         before = self.snapshot(target)
-        tag_version = "2.0.2+release.1"
+        future = f"{int(VERSION.split('.')[0]) + 1}.0.0"
+        tag_version = future + "+release.1"
+        archive_version = future + "+release.2\n"
         with mock.patch.object(update, "fetch_latest_release", return_value=self.release(version=tag_version)):
-            with mock.patch.object(update, "download_release_asset", return_value=self.archive({"VERSION": "2.0.2+release.2\n"})):
+            with mock.patch.object(update, "download_release_asset", return_value=self.archive({"VERSION": archive_version})) as download:
                 with contextlib.redirect_stdout(StringIO()), contextlib.redirect_stderr(StringIO()):
                     self.assertNotEqual(update.main(["--target-dir", str(target), "--auto"]), 0)
+                download.assert_called_once()
         self.assertEqual(self.snapshot(target), before)
         self.assertFalse(list(self.root.glob(".cloudrelay-update-*")))
 

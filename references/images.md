@@ -4,7 +4,7 @@ Use the bundled generator for CloudRelay image requests. Never request or expose
 
 ## Default Image Routing
 
-Treat CloudRelay as the default provider for raster image creation. Ordinary requests such as “generate an image,” “make a poster,” “create a logo,” “draw an illustration,” “render a mockup,” or “make variations” activate this skill automatically. Use another image provider or a code-native/vector workflow only when the user explicitly names it or requires a capability unavailable through CloudRelay.
+Treat CloudRelay as the default provider for raster image creation. Ordinary requests such as “generate an image,” “make a poster,” “create a logo,” “draw an illustration,” “render a mockup,” “make variations,” “edit this image,” or “参考这张图生成” activate this skill automatically. Use another image provider or a code-native/vector workflow only when the user explicitly names it or requires a capability unavailable through CloudRelay.
 
 If the user gives no channel preference, use GPT with its default model. Do not silently switch channels when a credential is missing, a model is unavailable, or a request takes time.
 
@@ -23,6 +23,7 @@ The three channels intentionally use the same gateway protocol:
 ```text
 GET  /v1/media/models
 POST /v1/images/generations/async
+POST /v1/images/edits/async
 GET  /v1/images/tasks/{task_id}
 ```
 
@@ -63,7 +64,7 @@ Do not say that the terminal is mandatory. If the user chooses chat configuratio
 
 ## Unified Workflow
 
-1. Collect the channel, prompt, output directory, model, size, quality, and image count. If no channel is requested, use GPT with gpt-image-2.5-flare; Grok defaults to grok-imagine-image-2.0; Gemini requires the explicit model confirmation above. Defaults are size auto, quality auto, and count 1. With auto, the corresponding field is omitted so the gateway/upstream can choose.
+1. Collect the channel, prompt, output directory, model, size, quality, image count, and any reference images in prompt order. If no channel is requested, use GPT with gpt-image-2.5-flare; Grok defaults to grok-imagine-image-2.0; Gemini requires the explicit model confirmation above. Defaults are size auto, quality auto, and count 1. With auto, the corresponding field is omitted so the gateway/upstream can choose.
 2. Resolve the active skill directory from the root SKILL.md; resolve bundled scripts relative to it rather than the current working directory.
 3. Check the selected provider key:
 
@@ -85,10 +86,26 @@ python "<skill-directory>/scripts/generate_image.py" \
   --output-dir "<workspace>/generated-images"
 ```
 
-Use --provider gemini --model <confirmed-model> or --provider grok for the other channels. The script first calls /v1/media/models, then submits once to /v1/images/generations/async and polls /v1/images/tasks/{task_id}. Do not submit a duplicate request while waiting.
-6. Verify that every reported output exists and inspect each image before claiming success. Report absolute paths and render images when supported. Also report the script's effective parameter summary: provider, model, prompt, size, quality, count requested/saved, gateway response format, endpoint, async transport, task ID, credential group, usage, discovered capability, and outputs. Never include a credential value.
+Use --provider gemini --model <confirmed-model> or --provider grok for the other channels. The script validates local reference files, calls /v1/media/models, then submits once to /v1/images/generations/async for text-only requests or /v1/images/edits/async when --image is supplied. Both modes poll /v1/images/tasks/{task_id}. Do not submit a duplicate request while waiting.
+6. Verify that every reported output exists and inspect each image before claiming success. Report absolute paths and render images when supported. Also report the script's effective parameter summary: provider, model, prompt, size, quality, count requested/saved, reference paths/count, gateway response format, endpoint, async transport, task ID, credential group, usage, discovered capability, and outputs. Never include a credential value.
 
-The unified task accepts {model, prompt, n} and adds size and quality only when they are not auto. Completed results are read from result.data; each image may contain url or b64_json and optional mime_type. URLs must be downloaded with the normal browser-like User-Agent used by the script.
+Text-only requests send JSON {model, prompt, n}; reference-image requests send those fields as multipart/form-data with repeated image[] file parts. Both add size and quality only when they are not auto. Completed results are read from result.data; each image may contain url or b64_json and optional mime_type. URLs must be downloaded with the normal browser-like User-Agent used by the script.
+
+### Reference images / 图生图
+
+Use `--image PATH` for a supplied local PNG, JPEG, or WebP. Repeat the option for multiple reference images, preserving the order described in the prompt. Inspect the references and describe what to retain or change (for example, the first image's subject and the second image's style). Resolve attachment paths to actual local files; naming a file in the prompt does not upload it.
+
+Example for two references (PowerShell):
+
+```powershell
+python "<skill-directory>/scripts/generate_image.py" --provider gpt --prompt "保留第一张参考图的主体，采用第二张参考图的画风" --image "<absolute-path>/subject.png" --image "<absolute-path>/style.jpg" --size 1536x1024 --quality high --count 1 --output-dir "<workspace>/generated-images"
+```
+
+For a single reference, supply one `--image`. The script reads each file once before credential lookup or network access, detects its MIME type from file bytes, and uploads the original bytes as `image[]` to `POST /v1/images/edits/async`. Chinese names and spaces are supported. Missing files, directories, empty files and unsupported formats fail locally. This option accepts local files, not URLs. Masks and region editing are outside this helper's current interface.
+
+The channel, model-selection and credential rules above still apply. Discovery confirms availability of an image model, not that every model or deployment supports reference images. If editing is rejected, report the error and stop; do not drop the references or resubmit as text-to-image. Client upload tests are offline and do not prove live support or visual fidelity for a channel.
+
+The parameter report includes `input_images` (absolute paths in order), `reference_image_count` and the actual submission `endpoint`. The legacy `input_image` field contains the first reference, or null for text-only requests. Reports omit uploaded bytes and base64 data.
 
 ### 2K and 4K Output
 
@@ -129,6 +146,7 @@ scripts/generate_image.py and scripts/configure_api_key.py use only the Python s
 ```text
 --provider auto|gpt|gemini|grok
 --prompt TEXT
+--image PATH                 # optional; repeat for multiple references
 --model NAME
 --size auto|2k|4k|WIDTHxHEIGHT
 --quality auto|low|medium|high

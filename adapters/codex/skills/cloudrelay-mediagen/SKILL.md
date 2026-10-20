@@ -1,6 +1,6 @@
 ---
 name: cloudrelay-mediagen
-description: "图影生成：通过 CloudRelay 生成 GPT、Gemini、Grok 图片，以及 Grok 文生视频、图生视频、视频编辑和续写；支持异步任务、分渠道密钥、成片下载与任务续查。Use for raster image and generated video requests, including animating a supplied image."
+description: "图影生成：通过 CloudRelay 生成 GPT、Gemini、Grok 图片（含参考图生图），以及 Grok 文生视频、图生视频、视频编辑和续写；支持异步任务、分渠道密钥、成片下载与任务续查。Use for raster image and generated video requests, including reference-guided image generation and animating a supplied image."
 ---
 
 # CloudRelay 图影生成
@@ -9,7 +9,7 @@ Use the bundled scripts for CloudRelay image and video requests. Resolve scripts
 
 ## Choose the workflow
 
-- **Images:** Read [references/images.md](references/images.md). Default to GPT (`gpt-image-2.5-flare`), with separate Gemini/Grok channels. Gemini requires explicit model choice before key checks or requests. Size, quality, count and actual-resolution reporting remain available.
+- **Images:** Read [references/images.md](references/images.md). Default to GPT (`gpt-image-2.5-flare`), with separate Gemini/Grok channels. Gemini requires explicit model choice before key checks or requests. For reference-guided generation or image edits, pass each supplied local reference with `--image`; repeat it for multiple images in prompt order. Size, quality, count and actual-resolution reporting remain available.
 - **Videos:** Read [references/videos.md](references/videos.md) for text-to-video, image-to-video, video editing, extension, or resuming tasks. Use `scripts/generate_video.py` and the Grok credential. The supplied reference documents videos only through Grok; do not invent GPT/Gemini video support.
 - **Image then video:** Generate and inspect the image first, then pass its absolute path as `--image`. To animate an existing picture, use it directly. For subsequent editing/extension pass the previous output as `--video`. Each submitted stage is separately billed; perform only requested stages.
 

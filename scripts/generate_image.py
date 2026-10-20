@@ -11,6 +11,7 @@ import json
 import os
 from pathlib import Path
 import re
+import secrets
 import struct
 import sys
 import time
@@ -23,6 +24,7 @@ import urllib.request
 BASE_URL = "https://cloudrelay.cn"
 MEDIA_MODELS_PATH = "/v1/media/models"
 IMAGE_SUBMIT_PATH = "/v1/images/generations/async"
+IMAGE_EDIT_SUBMIT_PATH = "/v1/images/edits/async"
 IMAGE_TASK_PATH = "/v1/images/tasks/{task_id}"
 
 PROVIDERS = ("gpt", "gemini", "grok")
@@ -287,11 +289,13 @@ def _request(
     method: str,
     path: str,
     api_key: str,
-    body: dict | None = None,
+    body: dict | bytes | None = None,
     timeout: float = 60,
+    *,
+    content_type: str = "application/json",
 ) -> tuple[int, dict]:
     """Make one unified gateway request with Bearer authentication."""
-    data = (
+    data = body if isinstance(body, bytes) else (
         json.dumps(body, ensure_ascii=False).encode("utf-8")
         if body is not None
         else None
@@ -301,7 +305,7 @@ def _request(
     request.add_header("User-Agent", USER_AGENT)
     request.add_header("Accept", "application/json")
     if data is not None:
-        request.add_header("Content-Type", "application/json")
+        request.add_header("Content-Type", content_type)
     try:
         with _NO_REDIRECT_OPENER.open(request, timeout=timeout) as response:
             return response.status, _parse_json(response.read())
@@ -403,15 +407,66 @@ def _image_payload(args: argparse.Namespace) -> dict:
     return payload
 
 
+def _image_submission(args: argparse.Namespace) -> tuple[str, dict | bytes, str]:
+    """Prepare and validate the upload before key lookup or network requests."""
+    payload = _image_payload(args)
+    references = getattr(args, "image", None) or []
+    if not references:
+        return IMAGE_SUBMIT_PATH, payload, "application/json"
+
+    boundary = "cloudrelay-" + secrets.token_hex(24)
+    delimiter = ("--" + boundary + "\r\n").encode("ascii")
+    parts = []
+    for name, value in payload.items():
+        parts.extend((
+            delimiter,
+            f'Content-Disposition: form-data; name="{name}"\r\n\r\n'.encode("ascii"),
+            str(value).encode("utf-8"),
+            b"\r\n",
+        ))
+    for index, reference in enumerate(references):
+        try:
+            path = Path(reference).expanduser().resolve()
+            if not path.is_file():
+                raise CloudRelayError(f"Reference image is not a local file: {path}")
+            data = path.read_bytes()
+        except (OSError, ValueError, RuntimeError) as error:
+            if isinstance(error, CloudRelayError):
+                raise
+            raise CloudRelayError(f"Cannot read reference image {reference}: {error}") from error
+        if data.startswith(b"\x89PNG\r\n\x1a\n"):
+            mime, extension = "image/png", ".png"
+        elif data.startswith(b"\xff\xd8\xff"):
+            mime, extension = "image/jpeg", ".jpg"
+        elif data.startswith(b"RIFF") and data[8:12] == b"WEBP":
+            mime, extension = "image/webp", ".webp"
+        else:
+            raise CloudRelayError(
+                f"Unsupported or empty reference image: {path}. Use PNG, JPEG, or WebP."
+            )
+        # Neutral ASCII filenames keep local paths and non-ASCII/header characters
+        # out of multipart headers. Original paths are retained in the report.
+        parts.extend((
+            delimiter,
+            (f'Content-Disposition: form-data; name="image[]"; '
+             f'filename="reference-{index + 1}{extension}"\r\n'
+             f'Content-Type: {mime}\r\n\r\n').encode("ascii"),
+            data,
+            b"\r\n",
+        ))
+    parts.append(("--" + boundary + "--\r\n").encode("ascii"))
+    return IMAGE_EDIT_SUBMIT_PATH, b"".join(parts), f"multipart/form-data; boundary={boundary}"
+
+
 def _submit_image(
-    provider: str, args: argparse.Namespace, api_key: str
+    provider: str, args: argparse.Namespace, api_key: str,
+    *,
+    submission: tuple[str, dict | bytes, str] | None = None,
 ) -> tuple[str, dict]:
+    endpoint, body, content_type = submission if submission is not None else _image_submission(args)
+    options = {"content_type": content_type} if isinstance(body, bytes) else {}
     status, task = _request(
-        "POST",
-        IMAGE_SUBMIT_PATH,
-        api_key,
-        _image_payload(args),
-        timeout=60,
+        "POST", endpoint, api_key, body, timeout=60, **options
     )
     if status not in (200, 202):
         _raise_http(provider, status, task, "Unified image submission", api_key)
@@ -499,9 +554,11 @@ def _poll_image(
 
 
 def _run_unified_image(
-    provider: str, args: argparse.Namespace, api_key: str
+    provider: str, args: argparse.Namespace, api_key: str,
+    *,
+    submission: tuple[str, dict | bytes, str] | None = None,
 ) -> tuple[str, list[dict], object, dict]:
-    task_id, submitted = _submit_image(provider, args, api_key)
+    task_id, submitted = _submit_image(provider, args, api_key, submission=submission)
     completed = _poll_image(
         provider, task_id, api_key, submitted, args.poll_timeout
     )
@@ -729,6 +786,8 @@ def _save_and_report(
                 "requested resolution is not verified. No upscale or resubmission performed.",
                 file=sys.stderr,
             )
+    input_images = [str(Path(path).expanduser().resolve())
+                    for path in (getattr(args, "image", None) or [])]
     summary = {
         "provider": provider,
         "model": args.model,
@@ -742,8 +801,10 @@ def _save_and_report(
         "count_requested": args.count,
         "count_saved": len(saved),
         "response_format": "gateway data (url or b64_json)",
-        "input_image": None,
-        "endpoint": IMAGE_SUBMIT_PATH,
+        "input_image": input_images[0] if input_images else None,
+        "input_images": input_images,
+        "reference_image_count": len(input_images),
+        "endpoint": IMAGE_EDIT_SUBMIT_PATH if input_images else IMAGE_SUBMIT_PATH,
         "transport": "async",
         "request_id": task_id,
         "credential_source": key_source,
@@ -769,7 +830,8 @@ def _save_and_report(
         ("count requested", "count_requested"),
         ("count saved", "count_saved"),
         ("response format", "response_format"),
-        ("input image", "input_image"),
+        ("input images", "input_images"),
+        ("reference image count", "reference_image_count"),
         ("endpoint", "endpoint"),
         ("transport", "transport"),
         ("request/task id", "request_id"),
@@ -818,6 +880,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--prompt", required=True, help="Image-generation prompt.")
     parser.add_argument(
+        "--image", type=Path, action="append", default=[],
+        help="Local PNG/JPEG/WebP reference image; repeat in prompt order for multiple images. "
+             "Uses the asynchronous image-edit endpoint.",
+    )
+    parser.add_argument(
         "--model",
         default=None,
         help="GPT/Grok use their channel defaults; Gemini requires an explicit confirmed choice.",
@@ -846,10 +913,13 @@ def main(argv: list[str] | None = None) -> int:
     try:
         provider = _resolve_provider(args.provider, args.model)
         args.model = _resolve_model(provider, args.model)
+        submission = _image_submission(args)
         api_key, key_source = _api_key(provider, with_source=True)
         print(f"Using channel={provider} model={args.model} key_source={key_source}")
         model_spec, discovery = _discover_model(provider, args.model, api_key)
-        task_id, images, usage, _ = _run_unified_image(provider, args, api_key)
+        task_id, images, usage, _ = _run_unified_image(
+            provider, args, api_key, submission=submission
+        )
         _save_and_report(
             args,
             provider,
